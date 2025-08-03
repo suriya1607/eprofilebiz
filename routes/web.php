@@ -92,6 +92,9 @@ use App\Models\FrontSlider;
 //Route::get('/', function () {
 //    return (!Auth::check()) ? \redirect(route('login')) : Redirect::to(getDashboardURL());
 //});
+Route::get('/', function () {
+    return 'Laravel Home Works!';
+});
 Route::middleware(['freshInstall'])->group(function () {
 
     Route::middleware(['checkCustomDomain'])->group(function () {
@@ -120,12 +123,7 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::get('/login/{provider}', [SocialAuthController::class, 'redirectToSocial'])->name('social.login');
     Route::get('/login/{provider}/callback', [SocialAuthController::class, 'handleSocialCallback']);
     Route::get('/check-email/{email}', [RegisteredUserController::class, 'checkEmail'])->name('check.email');
-        Route::get('/clear-laravel-cache', function () {
-    Artisan::call('config:clear');
-    Artisan::call('cache:clear');
-    Artisan::call('route:clear');
-    return 'Laravel cache cleared!';
-});
+
     Route::middleware('setLanguage')->group(function () {
         Route::get('/check-url-alias-available/{urlAlias}', [VcardController::class, 'checkUniqueUrlAlias'])->name('vcards.check-url-alias-available');
         Route::post('/change-language', [HomeController::class, 'changeLanguage']);
@@ -279,6 +277,7 @@ Route::middleware(['freshInstall'])->group(function () {
 
 
                     Route::get('/vcard/status/{vcard}', [VcardController::class, 'updateStatus'])->name('vcard.status');
+                    Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
                     Route::post('/vcard/section-view', [VcardController::class, 'vcardViewType'])->name('vcard.table.view');
                     Route::prefix('vcard')->group(function () {
                         //VCard services

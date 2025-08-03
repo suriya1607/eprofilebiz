@@ -203,6 +203,7 @@ class Vcard extends Model implements HasMedia
         'cover_image_type',
         'youtube_link',
         'cover_type',
+        'pwa_status'
     ];
 
     protected $casts = [
@@ -383,7 +384,7 @@ class Vcard extends Model implements HasMedia
         /** @var Media $media */
         $media = $this->getMedia(self::PROFILE_PATH)->first();
         if ($media !== null) {
-            return $media->getFullUrl();
+            return str_replace('\\', '/', $media->getFullUrl());
         }
 
         return asset('web/media/avatars/user2.png');
@@ -395,7 +396,7 @@ class Vcard extends Model implements HasMedia
         /** @var Media $media */
         $media = $this->getMedia(self::PROFILE_PATH)->first();
         if ($media !== null) {
-            $url = $media->getFullUrl();
+            $url = str_replace('\\', '/', $media->getFullUrl());
         }
 
         return base64_encode($url);
@@ -406,7 +407,7 @@ class Vcard extends Model implements HasMedia
         /** @var Media $media */
         $media = $this->getMedia(self::COVER_PATH)->first();
         if ($media !== null) {
-            return $media->getFullUrl();
+            return str_replace('\\', '/', $media->getFullUrl());
         }
 
         return asset('assets/images/default_cover_image.jpg');
@@ -418,7 +419,7 @@ class Vcard extends Model implements HasMedia
         /** @var Media $media */
         $media = $this->getMedia(self::FAVICON_PATH)->first();
         if ($media !== null) {
-            return $media->getFullUrl();
+            return str_replace('\\', '/', $media->getFullUrl());
         }
         $setting = Setting::where('key', 'favicon')->first();
         if ($setting && !empty($setting->favicon_url)) {

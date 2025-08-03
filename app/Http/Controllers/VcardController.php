@@ -120,7 +120,7 @@ class VcardController extends AppBaseController
             $settings = Setting::all()->keyBy('key');
         }
         $favicon = $settings['favicon'];
-        $adminFavicon = $favicon->favicon_url;
+        $adminFavicon = $favicon->value;
 
         return view('vcards.create', compact('partName', 'adminFavicon'));
     }
@@ -258,7 +258,7 @@ class VcardController extends AppBaseController
         $userId = $vcard->user->id;
         $inquiry = getUserSettingValue('enable_attachment_for_inquiry', $userId);
         $contactRequest = getUserSettingValue('ask_details_before_downloading_contact', $userId);
-        $enable_pwa = getUserSettingValue('enable_pwa', $userId);
+        $enable_pwa = $vcard->pwa_status;//getUserSettingValue('enable_pwa', $userId);
         $pwa_icon = getUserSettingValue('pwa_icon', $userId);
         $pwa_icon = (!$pwa_icon) ? 'logo.png' : str_replace(rtrim(env('APP_URL'), '/'), '', $pwa_icon);
         // notifation
@@ -434,6 +434,13 @@ class VcardController extends AppBaseController
         return $this->sendSuccess(__('messages.flash.vcard_status'));
     }
 
+    public function updatePwaStatus($id)
+    {
+        $vcard = Vcard::findOrFail($id);
+        $vcard->pwa_status = !$vcard->pwa_status;
+        $vcard->save();
+        return $this->sendSuccess(__('messages.flash.pwa_status'));
+    }
 
     public function update(UpdateVcardRequest $request, Vcard $vcard): RedirectResponse
     {

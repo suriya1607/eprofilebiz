@@ -18,6 +18,22 @@ listen("click", ".vcardStatus", function () {
     });
 });
 
+listen("click", ".vcardPwaStatus", function () {
+    let vcardId = $(this).data("id");
+    let updateUrl = route("vcard.pwa.status", vcardId); 
+    $.ajax({
+        type: "get",
+        url: updateUrl,
+        success: function (response) {
+            displaySuccessMessage(response.message);
+            Livewire.dispatch("refresh");
+        },
+        error: function (error) {
+            displayErrorMessage(error.responseJSON.message);
+        },
+    });
+});
+
 listen("click", ".vcard_delete-btn", function (event) {
     let vcardDeleteId = $(event.currentTarget).attr("data-id");
     let url = route("vcards.destroy", { vcard: vcardDeleteId });

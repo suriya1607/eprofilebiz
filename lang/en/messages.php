@@ -289,6 +289,7 @@ return [
         'category_required' => 'The category field is required.',
         'product_out_of_stock' => 'The product :name is currently out of stock. Please remove it from your cart.',
         'wp_order_delete' => 'Order deleted successfully.',
+        'pwa_status' => 'PWA status updated successfully',
     ],
     'form' => [
         'my_vcard_url' => 'my-vcard-page-url',
