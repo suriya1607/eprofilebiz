@@ -3,7 +3,6 @@ Livewire.hook("element.init", () => {
 });
 
 listen("click", ".vcardStatus", function () {
-    console.log('433433')
     let vcardId = $(this).data("id");
     let updateUrl = route("vcard.status", vcardId);
     $.ajax({

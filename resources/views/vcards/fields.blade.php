@@ -211,8 +211,6 @@
                                 <input type="checkbox" name="pwa_status" class="form-check-input pwa-enable"
                                     value="1" {{ old('pwa_status', $vcard->pwa_status ?? 1) == 1 ? 'checked' : '' }}
                                     id="pwaEnable">
-                                <span class="form-check-label text-gray-600"
-                                    for="pwaEnable">{{ __('messages.setting.enable_pwa') }}</span>&nbsp;&nbsp;
                             </label>
                         </div>
                     </div>

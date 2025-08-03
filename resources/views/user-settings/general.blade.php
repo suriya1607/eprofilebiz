@@ -108,7 +108,7 @@
                                         </span>
                                     </label>
                                 </div>
-                                <div class="form-group col-sm-3 mb-5">
+                                <div class="form-group col-sm-3 mb-5 d-none">
                                     <div class="form-group mb-3">
                                         {{ Form::label('pwaEnable', __('messages.setting.enable_pwa') . ':', ['class' => 'form-label mb-3']) }}
                                         <label class="form-check form-switch form-switch-sm cursor-pointer">

@@ -33,6 +33,14 @@ class UserVcardTable extends LivewireTableComponent
                     'class' => 'justify-content-center',
                 ];
             }
+            if ($column->isField('pwa_status')) {
+            return [
+                'class' => 'text-center',
+                'data-bs-toggle' => 'tooltip',
+                'title' => 'If already installed, Disable PWA.',
+            ];
+            }
+            
             return [];
         });
     }

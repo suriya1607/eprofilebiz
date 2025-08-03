@@ -120,7 +120,7 @@ class VcardController extends AppBaseController
             $settings = Setting::all()->keyBy('key');
         }
         $favicon = $settings['favicon'];
-        $adminFavicon = $favicon->favicon_url;
+        $adminFavicon = $favicon->value;
 
         return view('vcards.create', compact('partName', 'adminFavicon'));
     }
@@ -419,7 +419,6 @@ class VcardController extends AppBaseController
 
     public function updateStatus(Vcard $vcard): JsonResponse
     {
-        dd($vcard->status);
         if ($vcard->status == 0) {
             $user = getLogInUser();
             $vCards = Vcard::where('tenant_id', $user->tenant_id)->where('status', 1)->get();
