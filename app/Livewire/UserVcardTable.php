@@ -56,6 +56,8 @@ class UserVcardTable extends LivewireTableComponent
             Column::make(__('messages.vcard.status'), 'id')
                 ->sortable()
                 ->view('vcards.columns.status'),
+            Column::make(__('messages.setting.enable_pwa'), 'pwa_status')
+            ->view('vcards.columns.pwa_status'),
             Column::make(__('messages.vcard.created_at'), 'created_at')->sortable()->view('vcards.columns.created_at'),
             Column::make(__('messages.common.action'), 'updated_at')
                 ->view('vcards.columns.action'),

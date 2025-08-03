@@ -3,8 +3,25 @@ Livewire.hook("element.init", () => {
 });
 
 listen("click", ".vcardStatus", function () {
+    console.log('433433')
     let vcardId = $(this).data("id");
     let updateUrl = route("vcard.status", vcardId);
+    $.ajax({
+        type: "get",
+        url: updateUrl,
+        success: function (response) {
+            displaySuccessMessage(response.message);
+            Livewire.dispatch("refresh");
+        },
+        error: function (error) {
+            displayErrorMessage(error.responseJSON.message);
+        },
+    });
+});
+
+listen("click", ".vcardPwaStatus", function () {
+    let vcardId = $(this).data("id");
+    let updateUrl = route("vcard.pwa.status", vcardId); 
     $.ajax({
         type: "get",
         url: updateUrl,

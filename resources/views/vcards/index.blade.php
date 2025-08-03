@@ -7,9 +7,9 @@
         <div class="d-flex flex-column table-striped">
             @include('flash::message')
             @if(getLogInUser()->vcard_table_view_type == 0)
-            <livewire:user-vcard-table lazy/>
-            @else
             <livewire:vcard-lists lazy/>
+            @else
+            <livewire:user-vcard-table lazy/>
             @endif
         </div>
     </div>

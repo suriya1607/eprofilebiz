@@ -203,6 +203,7 @@ class Vcard extends Model implements HasMedia
         'cover_image_type',
         'youtube_link',
         'cover_type',
+        'pwa_status'
     ];
 
     protected $casts = [
