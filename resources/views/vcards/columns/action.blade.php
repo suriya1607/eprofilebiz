@@ -22,7 +22,7 @@
             <li>
                 <a title="{{ __('messages.vcard.download_vcard') }}" href="{{ route('add-contact', $row->id) }}"
                     class="btn p-1 fs-6 d-flex align-items-center" data-turbo="false">
-                    <i class="fas fa-download text-info fs-4 me-2"></i>&nbsp;{{ __('messages.vcard.download_vcard') }}
+                    <i class="fas fa-download text-info fs-4 me-2"></i>{{ __('messages.vcard.download_vcard') }}
                 </a>
             </li>
             <li>

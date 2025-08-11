@@ -44,6 +44,8 @@ class VerifyEmailController extends Controller
             event(new Verified($request->user()));
         }
         Auth::login($user);
+        // for skip tutorial
+        $user->update(['steps' => 1]);
 
         return redirect()->route('vcards.create'); 
         Flash::success(__('messages.placeholder.successfully_verified'));
