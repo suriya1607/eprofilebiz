@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AffiliateUser;
 use App\Models\EmailVerification;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,6 +43,11 @@ class VerifyEmailController extends Controller
 
             event(new Verified($request->user()));
         }
+        Auth::login($user);
+        // for skip tutorial
+        $user->update(['steps' => 1]);
+
+        return redirect()->route('vcards.create'); 
         Flash::success(__('messages.placeholder.successfully_verified'));
 
         return redirect(route('login'));
