@@ -37,8 +37,11 @@
                 <textarea id="wpMessageInput" class="form-control mb-3" rows="2"
                     placeholder="{{ __('messages.setting.wp_description') }}"></textarea>
                 <div class="text-center">
-                    <a href="javascript:void(0)" class="btn btn-success d-flex justify-content-center text-primary align-items-center rounded-0 text-decoration-none py-1 rounded-pill justify-content " id="sendWhatsAppBtn">
-                        <i class="fab fa-whatsapp"></i> Send
+                   <a href="javascript:void(0)" 
+                        class="btn btn-success d-flex justify-content-center align-items-center rounded-pill py-1"
+                        id="sendWhatsAppBtn"
+                        style="color: white;">
+                            <i class="fab fa-whatsapp me-2"></i> Send
                     </a>
                 </div>
             </div>
