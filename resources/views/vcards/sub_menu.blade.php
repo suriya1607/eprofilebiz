@@ -111,7 +111,7 @@
                     </a>
                 </li>
             @endif
-            @if (checkFeature('social_links'))
+            {{--@if (checkFeature('social_links'))
                 <li class="nav-item nav-item-1 position-relative">
                     <a class="nav-link-1 nav-link p-3 {{ isset($partName) && $partName == 'social-links' ? 'active' : '' }}"
                         href="{{ route('vcards.edit', $vcard->id) . '?part=social-links' }}">
@@ -119,7 +119,7 @@
                         {{ __('messages.social.social_links') }}
                     </a>
                 </li>
-            @endif
+            @endif--}}
             @if (checkFeature('custom-links'))
                 <li class="nav-item nav-item-1 position-relative">
                     <a class="nav-link-1 nav-link p-3 {{ isset($partName) && $partName == 'custom-links' ? 'active' : '' }}"

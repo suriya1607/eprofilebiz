@@ -326,6 +326,13 @@ class VcardRepository extends BaseRepository
                         $socialIcon->delete();
                     }
                 }
+            if (isset($input['whatsapp'])) {
+                $whatsapp = trim($input['whatsapp']);
+                if (!preg_match('/^https:\/\/wa\.me\//', $whatsapp)) {
+                    $whatsapp = 'https://wa.me/' . preg_replace('/[^0-9]/', '', $whatsapp);
+                }
+                $input['whatsapp'] = $whatsapp;
+            }
                 $socialLink->update($input);
             }
             if (isset($input['profile_img']) && !empty($input['profile_img'])) {

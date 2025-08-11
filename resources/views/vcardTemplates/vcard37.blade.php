@@ -1386,18 +1386,7 @@
                         <div
                             class="sub-btn-div @if (getLanguage($vcard->default_language) == 'Arabic') sub-btn-div-left @endif">
                             @if ($vcard->whatsapp_share)
-                            <div class="icon-search-container mb-3" data-ic-class="search-trigger">
-                                <div class="wp-btn">
-                                    <i class="fab text-light  fa-whatsapp fa-2x" id="wpIcon"></i>
-                                </div>
-                                <input type="number" class="search-input" id="wpNumber" data-ic-class="search-input"
-                                    placeholder="{{ __('messages.setting.wp_number') }}" />
-                                <div class="share-wp-btn-div">
-                                    <a href="javascript:void(0)"
-                                        class="vcard37-sticky-btn vcard37-btn-group d-flex justify-content-center text-primary align-items-center rounded-0 text-decoration-none py-1 rounded-pill justify-content share-wp-btn">
-                                        <i class="fa-solid fa-paper-plane"></i> </a>
-                                </div>
-                            </div>
+                            @include('vcardTemplates.globalwhatsappshare')
                             @endif
                             @if (empty($vcard->hide_stickybar))
                             <div class="{{ isset($vcard->whatsapp_share) ? 'vcard37-btn-group' : 'stickyIcon' }}">
@@ -1990,6 +1979,36 @@
   });
 
   startFlowerInterval();
+
+   $(document).ready(function () {
+        $('#sendWhatsAppBtn').on('click', function (e) {
+            e.preventDefault();
+
+            const number = $('#wpNumber').val().trim();
+            const message = $('#wpMessageInput').val().trim()|| '';
+            const receiver = $('#wpReceiver').val().trim();
+            /* const currentUrl = `${document.URL}?receiver=${encodeURIComponent(receiver)}`; */
+            const currentUrl = document.URL;
+
+            if (!number) {
+                alert("Please enter a WhatsApp number");
+                return;
+            }
+
+            let greetingmsg = `Greetings,
+
+            Here's a quick glimpse of my e-profile:
+            ${currentUrl}
+
+            Looking forward to fruitful engagements.
+
+            ${message}`;
+
+            const encodedMsg = encodeURIComponent(greetingmsg);
+            const url = `https://wa.me/${number}?text=${encodedMsg}`;
+            window.open(url, '_blank');
+        });
+    });
         </script>
 
 </body>
