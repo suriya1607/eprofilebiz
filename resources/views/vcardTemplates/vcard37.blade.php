@@ -1364,7 +1364,7 @@
             {{-- sticky buttons --}}
             <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
                 <div class="fixed-btn-section">
-                    <div
+                    <div style="width: 70px; height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: 12px;"
                         class="bars-btn flower-garden-bars-btn @if (getLanguage($vcard->default_language) == 'Arabic') vcard-bars-btn-left @endif">
                         {{-- <img src="{{ asset('assets/img/vcard30/sticky.png') }}" /> --}}
                         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1381,6 +1381,7 @@
                                 d="M16.2537 13.783H22.0282C23.3874 13.783 24.4996 14.8874 24.4996 16.2544V22.0289C24.4996 23.387 23.3863 24.5003 22.0282 24.5003H16.2537C14.8867 24.5003 13.7823 23.3881 13.7823 22.0289V16.2544C13.7823 14.8863 14.8856 13.783 16.2537 13.783Z"
                                 stroke="#ffffff" />
                         </svg>
+                            <span>Share</span>
                     </div>
                     <div class="sub-btn d-none">
                         <div
