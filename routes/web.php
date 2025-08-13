@@ -255,6 +255,14 @@ Route::middleware(['freshInstall'])->group(function () {
                         '/vcard/contact/{vcard}',
                         [VcardController::class, 'showContact']
                     )->name('vcard.showContact');
+                    Route::get(
+                        '/vcard/senders/{vcard}',
+                        [VcardController::class, 'SendersList']
+                    )->name('vcard.senderslist');
+                    Route::post(
+                        '/senders/store',
+                        [VcardController::class, 'SendersListStore']
+                    )->name('vcard.senderslist.store');
                     Route::get('/inquiries', [EnquiryController::class, 'enquiryList'])->name('inquiries.index');
                     Route::get('inquiries-attachment-download/{id}', [EnquiryController::class, 'inquiriesAttachmentDownload'])->name('inquiries.attachment.download');
                     Route::get(

@@ -61,6 +61,7 @@ class UserVcardTable extends LivewireTableComponent
                 : null,
             Column::make(__('messages.vcard.subsribers'), 'created_at')->view('vcards.columns.subscribers'),
             Column::make(__('messages.vcard.contact'), 'created_at')->view('vcards.columns.contact'),
+            Column::make(__('messages.vcard.senders'), 'created_at')->view('vcards.columns.senders'),
             Column::make(__('messages.vcard.status'), 'id')
                 ->sortable()
                 ->view('vcards.columns.status'),

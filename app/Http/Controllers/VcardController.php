@@ -30,6 +30,7 @@ use App\Models\CustomDomain;
 use App\Models\CustomLink;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\VcardSendersList;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -855,6 +856,18 @@ class VcardController extends AppBaseController
     {
         $vcardId = $vcard->id;
         return view('vcards.vcard-contact', compact('vcardId'));
+    }
+
+    public function senderslist(Vcard $vcard)
+    {
+        $vcardId = $vcard->id;
+        return view('vcards.vcard-senders', compact('vcardId'));
+    }
+
+    public function SendersListStore(Request $request)
+    {
+        $sender = VcardSendersList::create($request->all());
+        return response()->json(['status' => 'success', 'data' => $sender]);
     }
 
     public function vcardViewType(Request $request): JsonResponse
