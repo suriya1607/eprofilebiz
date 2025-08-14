@@ -136,7 +136,7 @@ class VcardController extends AppBaseController
             $width = $imageSize[0];
             $height = $imageSize[1];
 
-            if ($width > 16 && $height > 16) {
+            if ($width > 512 && $height > 512) {
                 Flash::error(__('messages.placeholder.favicon_invalid'));
 
                 return redirect()->back();
@@ -260,7 +260,7 @@ class VcardController extends AppBaseController
         $inquiry = getUserSettingValue('enable_attachment_for_inquiry', $userId);
         $contactRequest = getUserSettingValue('ask_details_before_downloading_contact', $userId);
         $enable_pwa = $vcard->pwa_status;//getUserSettingValue('enable_pwa', $userId);
-        $pwa_icon = getUserSettingValue('pwa_icon', $userId);
+        $pwa_icon = $vcard->favicon_url;//getUserSettingValue('pwa_icon', $userId);
         $pwa_icon = (!$pwa_icon) ? 'logo.png' : str_replace(rtrim(env('APP_URL'), '/'), '', $pwa_icon);
         // notifation
         // if(getUserSettingValue('notifation_enable',$userId)){
@@ -450,7 +450,7 @@ class VcardController extends AppBaseController
             $width = $imageSize[0];
             $height = $imageSize[1];
 
-            if ($width > 16 && $height > 16) {
+            if ($width > 512 && $height > 512) {
                 Flash::error(__('messages.placeholder.favicon_invalid'));
 
                 return redirect()->back();

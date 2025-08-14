@@ -4,9 +4,9 @@
         let deferredPrompt;
 
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Stop auto banner
-            deferredPrompt = e; // Save for button click
-            // $('.pwa-support').addClass('d-none'); // Show install button
+            console.log('beforeinstallprompt fired');
+            e.preventDefault();
+            deferredPrompt = e;
         });
 
         $('#installPwaBtn').on('click', function () {
