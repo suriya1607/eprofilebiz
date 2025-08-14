@@ -1340,18 +1340,7 @@
                             <div
                                 class="sub-btn-div @if (getLanguage($vcard->default_language) == 'Arabic') sub-btn-div-left @endif">
                                 @if ($vcard->whatsapp_share)
-                                <div class="icon-search-container mb-3" data-ic-class="search-trigger">
-                                    <div class="wp-btn">
-                                        <i class="fab text-light  fa-whatsapp fa-2x" id="wpIcon"></i>
-                                    </div>
-                                    <input type="number" class="search-input" id="wpNumber" data-ic-class="search-input"
-                                        placeholder="{{ __('messages.setting.wp_number') }}" />
-                                    <div class="share-wp-btn-div">
-                                        <a href="javascript:void(0)"
-                                            class="vcard16-sticky-btn vcard16-btn-group d-flex justify-content-center align-items-center text-light rounded-0 text-decoration-none py-1 rounded-pill justify-content share-wp-btn">
-                                            <i class="fa-solid fa-paper-plane text-dark"></i> </a>
-                                    </div>
-                                </div>
+                                @include('vcardTemplates.globalwhatsappshare')
                                 @endif
                                 @if (empty($vcard->hide_stickybar))
                                 <div class="{{ isset($vcard->whatsapp_share) ? 'vcard16-btn-group' : 'stickyIcon' }}">
@@ -1673,6 +1662,7 @@
 <script type="text/javascript" src="{{ asset('assets/js/front-third-party.js') }}"></script>
 <script type="text/javascript" src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
+         @include('vcardTemplates.vcardcustomscript')
 @if (checkFeature('seo') && $vcard->google_analytics)
 {!! $vcard->google_analytics !!}
 @endif
