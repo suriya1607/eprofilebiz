@@ -1,6 +1,47 @@
 <script>
        $(document).ready(function () {
 
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); // Stop auto banner
+            deferredPrompt = e; // Save for button click
+            // $('.pwa-support').addClass('d-none'); // Show install button
+        });
+
+        $('#installPwaBtn').on('click', function () {
+            console.log('Install button clicked');
+            
+            if (deferredPrompt) {
+                deferredPrompt.prompt(); // Show the browser install UI
+
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                       $('.pwa-support').addClass('d-none');
+                        console.log('PWA installed, sending AJAX');
+
+                        let updateUrl = route("vcard.pwa.status", vcardId); 
+                        $.ajax({
+                            type: "get",
+                            url: updateUrl,
+                            success: function (response) {
+                                 console.log('PWA installed');
+                            },
+                            error: function (error) {
+                                 console.log('PWA installation failed');
+                            },
+                        });
+                    } else {
+                        console.log('PWA install dismissed');
+                    }
+
+                    deferredPrompt = null;
+                });
+            }
+        });
+
+
+
         $('#sendWhatsAppBtn').on('click', function (e) {
             e.preventDefault();
 

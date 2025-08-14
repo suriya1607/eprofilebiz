@@ -95,6 +95,8 @@ use App\Models\FrontSlider;
 Route::get('/', function () {
     return 'Laravel Home Works!';
 });
+Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
+
 Route::middleware(['freshInstall'])->group(function () {
 
     Route::middleware(['checkCustomDomain'])->group(function () {
@@ -285,7 +287,6 @@ Route::middleware(['freshInstall'])->group(function () {
 
 
                     Route::get('/vcard/status/{vcard}', [VcardController::class, 'updateStatus'])->name('vcard.status');
-                    Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
                     Route::post('/vcard/section-view', [VcardController::class, 'vcardViewType'])->name('vcard.table.view');
                     Route::prefix('vcard')->group(function () {
                         //VCard services
