@@ -22,7 +22,7 @@ class Analytics
     public function handle(Request $request, Closure $next): Response
     {
         $uri = str_replace($request->root(), '', $request->url()) ?: '/';
-        $receiverName = urldecode(request()->query('receiver'));
+        $receiverName = base64_decode($request->query('receiver'));
         $urlAlias = Route::current()->parameters['alias'];
         $vcardId = Vcard::select('id')->where('url_alias', $urlAlias)->pluck('id')->toArray();
         $whatsappStoreId = WhatsappStore::select('id')->where('url_alias', $urlAlias)->pluck('id')->toArray();

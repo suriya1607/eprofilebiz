@@ -49,7 +49,7 @@
             const message = $('#wpMessageInput').val().trim()|| '';
             const receiver = $('#wpReceiver').val().trim();
             const vcardId = $('input[name="vcard_id"]').val();
-            const currentUrl = `${document.URL}?receiver=${encodeURIComponent(receiver)}`;
+            const currentUrl = `${document.URL}?receiver=${btoa(receiver)}`;
             /* const currentUrl = document.URL; */
 
             if (!number) {
