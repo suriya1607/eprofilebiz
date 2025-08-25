@@ -15,6 +15,7 @@ class VcardSendersList extends Model
         'vcard_id',
         'senders_name',
         'senders_number',
+        'senders_message',
     ];
 
 }

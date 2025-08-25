@@ -49,7 +49,9 @@
             const message = $('#wpMessageInput').val().trim()|| '';
             const receiver = $('#wpReceiver').val().trim();
             const vcardId = $('input[name="vcard_id"]').val();
-            const currentUrl = `${document.URL}?receiver=${btoa(receiver)}`;
+            const currentUrl = receiver 
+                ? `${document.URL}?receiver=${btoa(receiver)}` 
+                : document.URL;
             /* const currentUrl = document.URL; */
 
             if (!number) {
@@ -65,17 +67,12 @@
                 vcard_id: vcardId,
                 senders_name: receiver,
                 senders_number: number,
+                senders_message: message,
             },
             success: function (res) {
 
-                let greetingmsg = `Greetings,
+let greetingmsg = `*Greetings,*\n\nHere's a quick glimpse of my e-profile:\n${currentUrl}\n\nLooking forward to fruitful engagements.`;
 
-                Here's a quick glimpse of my e-profile:
-                ${currentUrl}
-
-                Looking forward to fruitful engagements.
-
-                ${message}`;
 
                 const encodedMsg = encodeURIComponent(greetingmsg);
                 const url = `https://wa.me/${number}?text=${encodedMsg}`;

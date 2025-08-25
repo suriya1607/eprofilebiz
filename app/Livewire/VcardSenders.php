@@ -35,9 +35,19 @@ class VcardSenders extends LivewireTableComponent
     {
         return [
             Column::make(__('Sender Name'), "senders_name")
-                ->sortable()->searchable(),
+                ->sortable()
+                ->searchable()
+                ->format(fn($value) => $value ?? '-'),
+
             Column::make(__('Sender Number'), "senders_number")
-                ->sortable()->searchable(),
+                ->sortable()
+                ->searchable()
+                ->format(fn($value) => $value ?? '-'),
+
+            Column::make(__('Sender Message'), "senders_message")
+                ->sortable()
+                ->searchable()
+                ->format(fn($value) => $value ?? '-'),
             Column::make(__('Sent At'), "created_at")
                 ->sortable(),
         ];
