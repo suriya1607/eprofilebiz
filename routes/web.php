@@ -95,6 +95,8 @@ use App\Models\FrontSlider;
 Route::get('/', function () {
     return 'Laravel Home Works!';
 });
+
+
 Route::middleware(['freshInstall'])->group(function () {
 
     Route::middleware(['checkCustomDomain'])->group(function () {
@@ -255,6 +257,14 @@ Route::middleware(['freshInstall'])->group(function () {
                         '/vcard/contact/{vcard}',
                         [VcardController::class, 'showContact']
                     )->name('vcard.showContact');
+                    Route::get(
+                        '/vcard/senders/{vcard}',
+                        [VcardController::class, 'SendersList']
+                    )->name('vcard.senderslist');
+                    // Route::post(
+                    //     '/senders/store',
+                    //     [VcardController::class, 'SendersListStore']
+                    // )->name('vcard.senderslist.store');
                     Route::get('/inquiries', [EnquiryController::class, 'enquiryList'])->name('inquiries.index');
                     Route::get('inquiries-attachment-download/{id}', [EnquiryController::class, 'inquiriesAttachmentDownload'])->name('inquiries.attachment.download');
                     Route::get(
@@ -277,7 +287,6 @@ Route::middleware(['freshInstall'])->group(function () {
 
 
                     Route::get('/vcard/status/{vcard}', [VcardController::class, 'updateStatus'])->name('vcard.status');
-                    Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
                     Route::post('/vcard/section-view', [VcardController::class, 'vcardViewType'])->name('vcard.table.view');
                     Route::prefix('vcard')->group(function () {
                         //VCard services
@@ -737,6 +746,10 @@ Route::middleware(['freshInstall'])->group(function () {
             [AffiliationWithdrawController::class, 'showAffiliationWithdraw']
         )->name('sadmin.withdraw-transactions.show');
     });
+
+    // senders 
+    Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
+    Route::post('/senders/store',[VcardController::class, 'SendersListStore'])->name('vcard.senderslist.store');
 
     //user delete
     Route::delete('/delete-data/{user}', [UserController::class, 'userDelete'])->name('delete-user');

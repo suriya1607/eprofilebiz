@@ -22,6 +22,7 @@ class Analytics
     public function handle(Request $request, Closure $next): Response
     {
         $uri = str_replace($request->root(), '', $request->url()) ?: '/';
+        $receiverName = base64_decode($request->query('receiver'));
         $urlAlias = Route::current()->parameters['alias'];
         $vcardId = Vcard::select('id')->where('url_alias', $urlAlias)->pluck('id')->toArray();
         $whatsappStoreId = WhatsappStore::select('id')->where('url_alias', $urlAlias)->pluck('id')->toArray();
@@ -50,6 +51,7 @@ class Analytics
                 'vcard_id' => $vcardId[0] ?? null,
                 'whatsapp_store_id' => $whatsappStoreId[0] ?? null,
                 'uri' => $uri,
+                'receiver_name'=> $receiverName,
                 'source' => $request->headers->get('referer'),
                 'country' => $country,
                 'browser' => $agent->browser() ?? null,

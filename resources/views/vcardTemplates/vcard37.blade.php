@@ -1681,6 +1681,7 @@
         <script type="text/javascript" src="{{ asset('assets/js/front-third-party.js') }}"></script>
         <script type="text/javascript" src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
+         @include('vcardTemplates.vcardcustomscript')
         <script>
             $("#myID").flatpickr();
         @if (isset(checkFeature('advanced')->custom_js) && $vcard->custom_js)
@@ -1981,35 +1982,6 @@
 
   startFlowerInterval();
 
-   $(document).ready(function () {
-        $('#sendWhatsAppBtn').on('click', function (e) {
-            e.preventDefault();
-
-            const number = $('#wpNumber').val().trim();
-            const message = $('#wpMessageInput').val().trim()|| '';
-            const receiver = $('#wpReceiver').val().trim();
-            /* const currentUrl = `${document.URL}?receiver=${encodeURIComponent(receiver)}`; */
-            const currentUrl = document.URL;
-
-            if (!number) {
-                alert("Please enter a WhatsApp number");
-                return;
-            }
-
-            let greetingmsg = `Greetings,
-
-            Here's a quick glimpse of my e-profile:
-            ${currentUrl}
-
-            Looking forward to fruitful engagements.
-
-            ${message}`;
-
-            const encodedMsg = encodeURIComponent(greetingmsg);
-            const url = `https://wa.me/${number}?text=${encodedMsg}`;
-            window.open(url, '_blank');
-        });
-    });
         </script>
 
 </body>

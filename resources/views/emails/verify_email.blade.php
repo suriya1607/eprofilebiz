@@ -14,7 +14,10 @@
             {{ __('messages.mail.verify_email') }}
         @endcomponent
         <p>{{ __('messages.mail.action_required') }}</p>
-        <p>{{ __('messages.mail.thanks_regard') }}</p>
+        <p>{{ __('messages.mail.app_download') }}</p>
+        <p>{{ __('messages.mail.andriod') }}: <a href="https://play.google.com/store/apps/details?id=com.digitalwall">https://play.google.com/store/apps/details?id=com.digitalwall</a></p>
+        <p>{{ __('messages.mail.ios') }}: <a href="https://apps.apple.com/in/app/digital-wall/id6749620161">https://apps.apple.com/in/app/digital-wall/id6749620161</a></p>
+        <p>{{ __('messages.mail.thanks_regard') }}</p>       
         <p>{{ getAppName() }}</p>
         <hr>
         <p>{{ __('messages.mail.slot_text') }}: <a href="{{ $data['url'] }}">{!! $data['url'] !!}</a></p>

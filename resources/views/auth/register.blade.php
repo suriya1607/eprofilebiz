@@ -127,9 +127,12 @@
                                     @if (getSuperAdminSettingValue('captcha_enable'))
                                         <div class="col-md-12 mb-sm-7 mb-4">
                                             @if (getRecaptchaVersion() == 1)
-                                                <div class="g-recaptcha"
+                                                <div class="h-captcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                                <script src="https://hcaptcha.com/1/api.js" async defer></script>
+
+                                                <!-- <div class="g-recaptcha"
                                                     data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                                                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                                                <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
                                             @else
                                                 <input type="hidden" name="g-recaptcha-response" id="recaptcha-token">
                                                 <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}" async defer>

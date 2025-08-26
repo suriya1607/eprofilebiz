@@ -30,6 +30,7 @@ use App\Models\CustomDomain;
 use App\Models\CustomLink;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\VcardSendersList;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -135,7 +136,7 @@ class VcardController extends AppBaseController
             $width = $imageSize[0];
             $height = $imageSize[1];
 
-            if ($width > 16 && $height > 16) {
+            if ($width > 512 && $height > 512) {
                 Flash::error(__('messages.placeholder.favicon_invalid'));
 
                 return redirect()->back();
@@ -259,7 +260,7 @@ class VcardController extends AppBaseController
         $inquiry = getUserSettingValue('enable_attachment_for_inquiry', $userId);
         $contactRequest = getUserSettingValue('ask_details_before_downloading_contact', $userId);
         $enable_pwa = $vcard->pwa_status;//getUserSettingValue('enable_pwa', $userId);
-        $pwa_icon = getUserSettingValue('pwa_icon', $userId);
+        $pwa_icon = $vcard->favicon_url;//getUserSettingValue('pwa_icon', $userId);
         $pwa_icon = (!$pwa_icon) ? 'logo.png' : str_replace(rtrim(env('APP_URL'), '/'), '', $pwa_icon);
         // notifation
         // if(getUserSettingValue('notifation_enable',$userId)){
@@ -449,7 +450,7 @@ class VcardController extends AppBaseController
             $width = $imageSize[0];
             $height = $imageSize[1];
 
-            if ($width > 16 && $height > 16) {
+            if ($width > 512 && $height > 512) {
                 Flash::error(__('messages.placeholder.favicon_invalid'));
 
                 return redirect()->back();
@@ -855,6 +856,18 @@ class VcardController extends AppBaseController
     {
         $vcardId = $vcard->id;
         return view('vcards.vcard-contact', compact('vcardId'));
+    }
+
+    public function senderslist(Vcard $vcard)
+    {
+        $vcardId = $vcard->id;
+        return view('vcards.vcard-senders', compact('vcardId'));
+    }
+
+    public function SendersListStore(Request $request)
+    {
+        $sender = VcardSendersList::create($request->all());
+        return response()->json(['status' => 'success', 'data' => $sender]);
     }
 
     public function vcardViewType(Request $request): JsonResponse

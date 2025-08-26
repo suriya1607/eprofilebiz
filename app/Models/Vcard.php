@@ -285,7 +285,7 @@ class Vcard extends Model implements HasMedia
         'alternative_email' => 'nullable|email:filter',
         'alternative_phone' => 'nullable',
         'youtube_link' => 'nullable|url',
-        'favicon_img' => 'image|dimensions:max_width=16,max_height=16',
+        'favicon_img' => 'image|dimensions:min_width=192,min_height=192,max_width=512,max_height=512',
     ];
 
     const PROFILE_PATH = 'vcards/profiles';
@@ -421,9 +421,9 @@ class Vcard extends Model implements HasMedia
         if ($media !== null) {
             return str_replace('\\', '/', $media->getFullUrl());
         }
-        $setting = Setting::where('key', 'favicon')->first();
-        if ($setting && !empty($setting->favicon_url)) {
-            return $setting->favicon_url;
+        $setting = Setting::where('key', 'pwa_favicon')->first();
+        if ($setting && !empty($setting->value)) {
+            return $setting->value;
         }
         return asset('web/media/logos/favicon-infyom.png');
     }
