@@ -818,7 +818,7 @@
                                 @endif
                                 <div class="d-flex justify-content-center">
                                     <button type="submit"
-                                        class="contact-btn text-white mt-4 d-block ms-sm-auto">{{ __('messages.contact_us.send_message') }}</button>
+                                        class="contact-btn text-white mt-4 d-block ms-sm-auto" {{$subscriptionclass}}>{{ __('messages.contact_us.send_message') }}</button>
                                 </div>
                             </div>
                         @endif
@@ -905,7 +905,7 @@
                                 @endif
                                 <div class="d-flex justify-content-center">
                                     <button type="submit"
-                                        class="contact-btn text-white mt-4 d-block ms-sm-auto">{{ __('messages.contact_us.send_message') }}</button>
+                                        class="contact-btn text-white mt-4 d-block ms-sm-auto" {{$subscriptionclass}}>{{ __('messages.contact_us.send_message') }}</button>
                                 </div>
                             </div>
                         @endif
@@ -978,7 +978,7 @@
                 @endif
             </div>
 
-            <div class="w-100 d-flex justify-content-center  position-fixed" style="top:50%; left:0; z-index: 9999;">
+            <div class="w-100 d-flex justify-content-center  position-fixed" style="top:50%; left:0; z-index: 9999; @if($subscriptionclass == 'disabled') pointer-events:none;opacity:0.5;@endif" >
                 <div
                     class="vcard-bars-btn position-relative @if (getLanguage($vcard->default_language) == 'Arabic') vcard-bars-btn-left @endif">
                     @if (empty($vcard->hide_stickybar))

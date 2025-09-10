@@ -923,7 +923,7 @@
                                     <div class="col-12 text-center mt-3">
                                         <button id="send-btn"
                                             data-button-style="{{ isset($dynamicVcard) ? $dynamicVcard->button_style : 'default' }}"
-                                            class="contact-btn send-btn" type="submit">
+                                            class="contact-btn send-btn" type="submit" {{$subscriptionclass}}>
                                             {{ __('messages.contact_us.send_message') }}
                                         </button>
                                     </div>
@@ -994,7 +994,7 @@
                                     <div class="col-12 text-center mt-3">
                                         <button id="send-btn"
                                             data-button-style="{{ isset($dynamicVcard) ? $dynamicVcard->button_style : 'default' }}"
-                                            class="contact-btn send-btn" type="submit">
+                                            class="contact-btn send-btn" type="submit" {{$subscriptionclass}}>
                                             {{ __('messages.contact_us.send_message') }}
                                         </button>
                                     </div>
@@ -1042,7 +1042,7 @@
             @endif
             {{-- add to contact --}}
             @if ($vcard->enable_contact)
-                <div class="add-to-contact-section mb-3 pb-60">
+                <div class="add-to-contact-section mb-3 pb-60" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
                     <div class="text-center" @if (getLanguage($vcard->default_language) == 'Arabic') dir="rtl" @endif>
                         @if ($contactRequest == 1)
                             <a href="{{ Auth::check() ? route('add-contact', $vcard->id) : 'javascript:void(0);' }}"
@@ -1103,7 +1103,7 @@
             {{-- sticky buttons --}}
             @if (getLanguage($vcard->default_language) != 'Arabic')
                 <div
-                    class="btn-section cursor-pointer {{ $dynamicVcard !== null && $dynamicVcard->sticky_bar == 0 ? 'btn-section-left' : 'btn-section' }}">
+                    class="btn-section cursor-pointer {{ $dynamicVcard !== null && $dynamicVcard->sticky_bar == 0 ? 'btn-section-left' : 'btn-section' }}" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
                     <div class="fixed-btn-section">
                         @if (empty($vcard->hide_stickybar))
                             <div class="bars-btn dynamic-bars-btn">
@@ -1150,7 +1150,7 @@
                 </div>
             @endif
             @if (getLanguage($vcard->default_language) == 'Arabic')
-                <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
+                <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
                     <div class="fixed-btn-section">
                         @if (empty($vcard->hide_stickybar))
                             <div class="bars-btn dynamic-bars-btn ">

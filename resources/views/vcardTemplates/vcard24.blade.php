@@ -1012,7 +1012,7 @@
                                         </div>
                                     @endif
                                     <div class="col-12 text-center mt-2">
-                                        <button class="contact-btn send-btn btn rounded btn-orange" type="submit">
+                                        <button class="contact-btn send-btn btn rounded btn-orange" type="submit" {{$subscriptionclass}}>
                                             {{ __('messages.contact_us.send_message') }}
                                         </button>
                                     </div>
@@ -1081,7 +1081,7 @@
                                         </div>
                                     @endif
                                     <div class="col-12 text-center">
-                                        <button class="contact-btn send-btn btn rounded btn-orange" type="submit">
+                                        <button class="contact-btn send-btn btn rounded btn-orange" type="submit" {{$subscriptionclass}}>
                                             {{ __('messages.contact_us.send_message') }}
                                         </button>
                                     </div>
@@ -1143,7 +1143,7 @@
                 <div class="bg-img">
                     <img src="{{ asset('assets/img/vcard24/main-bg.png') }}" class="w-100" loading="lazy" />
                 </div>
-                <div class="add-to-contact-section">
+                <div class="add-to-contact-section" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
                     <div class="text-center" @if (getLanguage($vcard->default_language) == 'Arabic') dir="rtl" @endif>
                         @if ($contactRequest == 1)
                             <a href="{{ Auth::check() ? route('add-contact', $vcard->id) : 'javascript:void(0);' }}"
@@ -1198,7 +1198,7 @@
                 @endif
             </div>
             {{-- sticky button --}}
-            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
+            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
                 <div class="fixed-btn-section">
                     @if (empty($vcard->hide_stickybar))
                         <div
