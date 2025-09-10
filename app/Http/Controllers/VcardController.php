@@ -335,10 +335,8 @@ class VcardController extends AppBaseController
 
         if ($usersubscription->subscription->ends_at < Carbon::now()->format('Y-m-d H:i:s')) {
             $subscriptionclass = 'disabled';
-            // $subscriptionclass = 'data-disabled=true';
         }
-        // dd($vcard_name);
-        $vcard_name = 'vcard36';
+
         if ($vcard->status) {
             return view(
                 'vcardTemplates.' . $vcard_name,
@@ -448,9 +446,9 @@ class VcardController extends AppBaseController
     {
         $vcard = Vcard::findOrFail($id);
         $vcard->pwa_status = !$vcard->pwa_status;
-        if($request->get('downloadstatus')){
-            $vcard->is_downloaded = 1;
-        }
+        // if($request->get('downloadstatus')){
+        //     $vcard->is_downloaded = 1;
+        // }
         $vcard->save();
         return $this->sendSuccess(__('messages.flash.pwa_status'));
     }
