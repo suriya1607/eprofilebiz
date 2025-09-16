@@ -751,6 +751,14 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
     Route::post('/senders/store',[VcardController::class, 'SendersListStore'])->name('vcard.senderslist.store');
 
+    // download samplefile
+    Route::get('/users/samplecsv', [UserController::class, 'downloadSampleCSV'])->name('users.samplecsv');
+    Route::post('/users/import', [UserController::class, 'import'])->name('users.import');
+    Route::get('imports/download/{file}', [UserController::class, 'downloadErrorFile'])->name('imports.download');
+
+
+
+
     //user delete
     Route::delete('/delete-data/{user}', [UserController::class, 'userDelete'])->name('delete-user');
 
