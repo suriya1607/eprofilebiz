@@ -330,6 +330,12 @@ class VcardController extends AppBaseController
             session(['languageChange_' . $alias => $languageName]);
             setLocalLang(getLocalLanguage());
         }
+        $subscriptionclass = '';
+        $usersubscription = User::whereTenantId($vcard->tenant_id)->with('subscription')->first();
+
+        if ($usersubscription->subscription->ends_at < Carbon::now()->format('Y-m-d H:i:s')) {
+            $subscriptionclass = 'disabled';
+        }
 
         if ($vcard->status) {
             return view(
@@ -439,6 +445,9 @@ class VcardController extends AppBaseController
     {
         $vcard = Vcard::findOrFail($id);
         $vcard->pwa_status = !$vcard->pwa_status;
+        // if($request->get('downloadstatus')){
+        //     $vcard->is_downloaded = 1;
+        // }
         $vcard->save();
         return $this->sendSuccess(__('messages.flash.pwa_status'));
     }
