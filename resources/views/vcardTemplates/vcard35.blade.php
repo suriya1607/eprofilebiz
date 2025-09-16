@@ -1109,7 +1109,7 @@
                                 </div>
                                 @endif
                                 <div class="col-12 text-center mt-4 pt-2">
-                                    <button class="btn btn-primary w-100" type="submit" {{$subscriptionclass}}>
+                                    <button class="btn btn-primary w-100" type="submit">
                                         {{ __('messages.contact_us.send_message') }}
                                     </button>
                                 </div>
@@ -1204,7 +1204,7 @@
                 @endif
                 {{-- add to contact --}}
                 @if ($vcard->enable_contact)
-                <div class="add-to-contact-section" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+                <div class="add-to-contact-section">
 
                     <div class="add-to-contact-btn text-center" @if (getLanguage($vcard->default_language) ==
                         'Arabic') dir="rtl" @endif>
@@ -1263,7 +1263,7 @@
                 </div>
 
                 {{-- <div
-                    class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+                    class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
                     <div class="fixed-btn-section">
                         <div class="bars-btn real-estate-bars-btn">
                             <img src="{{ asset('assets/img/vcard33/sticky.png') }}" />
@@ -1280,7 +1280,7 @@
                 </div> --}}
                 {{-- sticky buttons --}}
                 <div
-                    class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+                    class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
                     <div class="fixed-btn-section">
                         <div
                             class="bars-btn real-estate-bars-btn @if (getLanguage($vcard->default_language) == 'Arabic') vcard-bars-btn-left @endif">

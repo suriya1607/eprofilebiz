@@ -1182,7 +1182,7 @@
                         </div>
                         @endif
                         <div class="text-center">
-                            <button class="contact-btn send-btn btn btn-primary fw-6" {{$subscriptionclass}} type="submit">{{
+                            <button class="contact-btn send-btn btn btn-primary fw-6" type="submit">{{
                                 __('messages.contact_us.send_message') }}</button>
                         </div>
                     </form>
@@ -1309,13 +1309,13 @@
             <div class="addcard text-center">
                     @if ($contactRequest == 1)
                     <a href="{{ Auth::check() ? route('add-contact', $vcard->id) : 'javascript:void(0);' }}"
-                        class="z-2 btn btn-primary text-white fw-6 fs-16 lh-base add-btn d-flex gap-2 align-items-center position-fixed start-0 end-0 mx-auto add-contact-btn {{ Auth::check() ? 'auth-contact-btn' : 'ask-contact-detail-form' }} {{$subscriptionclass}}" 
+                        class="z-2 btn btn-primary text-white fw-6 fs-16 lh-base add-btn d-flex gap-2 align-items-center position-fixed start-0 end-0 mx-auto add-contact-btn {{ Auth::check() ? 'auth-contact-btn' : 'ask-contact-detail-form' }}"
                         data-action="{{ Auth::check() ? route('contact-request.store') : 'show-modal' }}"
                         type="submit"><i class="fas fa-download fa-address-book"></i>
                         &nbsp;{{ __('messages.setting.add_contact') }}</a>
                     @else
                     <a href="{{ route('add-contact', $vcard->id) }}"
-                        class="z-2 btn btn-primary text-white fw-6 fs-16 lh-base add-btn d-flex gap-2 align-items-center position-fixed start-0 end-0 mx-auto {{$subscriptionclass}}" 
+                        class="z-2 btn btn-primary text-white fw-6 fs-16 lh-base add-btn d-flex gap-2 align-items-center position-fixed start-0 end-0 mx-auto"
                         type="submit"><i class="fas fa-download fa-address-book"></i>
                         &nbsp;{{ __('messages.setting.add_contact') }}</a>
                     @endif
@@ -1362,7 +1362,7 @@
             </div>
 
             {{-- sticky buttons --}}
-            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
                 <div class="fixed-btn-section">
                     <div style="width: 70px; height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: 12px;"
                         class="bars-btn flower-garden-bars-btn @if (getLanguage($vcard->default_language) == 'Arabic') vcard-bars-btn-left @endif">

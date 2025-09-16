@@ -30,23 +30,6 @@ class CreateRegisterRequest extends FormRequest
         }
         $rules['password'] = 'required|same:password_confirmation|min:8';
         $rules['term_policy_check'] = 'required';
-        $rules['contact'] = [
-            'required',
-            function ($attribute, $value, $fail) {
-                $region = request('region_code');
-                if ($region == '91') {
-                    // India: 10 digits, starts with 6-9
-                    if (!preg_match('/^[6-9]\d{9}$/', $value)) {
-                        $fail('Invalid Indian mobile number. It must be 10 digits and start with 6-9.');
-                    }
-                } else {
-                    // E.164 International: optional +, 8-15 digits, does not start with zero
-                    if (!preg_match('/^\+?[1-9]\d{7,14}$/', $value)) {
-                        $fail('Invalid phone number for the selected country.');
-                    }
-                }
-            }
-        ];
         if (getSuperAdminSettingValue('captcha_enable')) {
             $rules['g-recaptcha-response'] = ['required', function ($attribute, $value, $fail) {
                 if(getRecaptchaVersion() == 1) {

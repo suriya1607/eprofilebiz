@@ -1040,7 +1040,7 @@
                                         </div>
                                     @endif
                                     <div class="col-12 text-center mt-4">
-                                        <button class="btn send-btn contact-btn rounded-2 btn-primary" type="submit" {{$subscriptionclass}}>
+                                        <button class="btn send-btn contact-btn rounded-2 btn-primary" type="submit">
                                             {{ __('messages.contact_us.send_message') }}
                                         </button>
                                     </div>
@@ -1111,7 +1111,7 @@
                                         </div>
                                     @endif
                                     <div class="col-12 text-center mt-4">
-                                        <button class="btn send-btn contact-btn rounded-2 btn-primary" type="submit" {{$subscriptionclass}}>
+                                        <button class="btn send-btn contact-btn rounded-2 btn-primary" type="submit">
                                             {{ __('messages.contact_us.send_message') }}
                                         </button>
                                     </div>
@@ -1161,7 +1161,7 @@
             {{-- add to contact --}}
             @if ($vcard->enable_contact)
                 <div class="add-to-contact-section px-30">
-                    <div class="text-center mb-2" @if (getLanguage($vcard->default_language) == 'Arabic') dir="rtl" @endif @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+                    <div class="text-center mb-2" @if (getLanguage($vcard->default_language) == 'Arabic') dir="rtl" @endif>
                         @if ($contactRequest == 1)
                             <a href="{{ Auth::check() ? route('add-contact', $vcard->id) : 'javascript:void(0);' }}"
                                 class="vcard17-sticky-btn add-contact-btn  d-flex justify-content-center align-items-center rounded px-5 text-decoration-none py-1  justify-content-center
@@ -1216,7 +1216,7 @@
                 @endif
             </div>
             {{-- sticky btn --}}
-            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
                 <div class="fixed-btn-section">
                     @if (empty($vcard->hide_stickybar))
                         <div

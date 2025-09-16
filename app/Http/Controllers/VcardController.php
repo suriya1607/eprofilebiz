@@ -371,7 +371,6 @@ class VcardController extends AppBaseController
                     'vcard11Blog',
                     'vcard11PrivacyPolicy',
                     'vcard11TermAndCondition',
-                    'subscriptionclass',
                 )
             );
         }
@@ -442,7 +441,7 @@ class VcardController extends AppBaseController
         return $this->sendSuccess(__('messages.flash.vcard_status'));
     }
 
-    public function updatePwaStatus($id , Request $request)
+    public function updatePwaStatus($id)
     {
         $vcard = Vcard::findOrFail($id);
         $vcard->pwa_status = !$vcard->pwa_status;

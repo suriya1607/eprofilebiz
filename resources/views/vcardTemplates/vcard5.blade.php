@@ -914,7 +914,7 @@
                                         @endif
                                         <div class="text-center mt-3">
                                             <button type="submit"
-                                                class="btn contact-btn px-4" {{$subscriptionclass}}>{{ __('messages.contact_us.send_message') }}</button>
+                                                class="btn contact-btn px-4">{{ __('messages.contact_us.send_message') }}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -1023,7 +1023,7 @@
                                         @endif
                                         <div class="text-center mt-3">
                                             <button type="submit"
-                                                class="btn contact-btn px-4" {{$subscriptionclass}}>{{ __('messages.contact_us.send_message') }}</button>
+                                                class="btn contact-btn px-4">{{ __('messages.contact_us.send_message') }}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -1099,7 +1099,7 @@
                     <div class="w-100 d-flex justify-content-center  position-fixed"
                         style="top:50%; left:0; z-index: 9999;">
                         <div
-                            class="vcard-bars-btn position-relative @if (getLanguage($vcard->default_language) == 'Arabic') vcard-bars-btn-left @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+                            class="vcard-bars-btn position-relative @if (getLanguage($vcard->default_language) == 'Arabic') vcard-bars-btn-left @endif">
                             @if (empty($vcard->hide_stickybar))
                                 <a href="javascript:void(0)"
                                     class="vcard5-sticky-btn sticky-btn bg-white  bars-btn d-flex justify-content-center text-white me-5 align-items-center rounded-0 px-5 mb-3 text-decoration-none py-1 rounded-pill justify-content-center">
@@ -1131,7 +1131,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="w-100 d-flex justify-content-center sticky-vcard-div pb-2" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+                            <div class="w-100 d-flex justify-content-center sticky-vcard-div pb-2">
                                 @if ($vcard->enable_contact)
                                     <div class="" @if (getLanguage($vcard->default_language) == 'Arabic') dir="rtl" @endif>
                                         @if ($contactRequest == 1)

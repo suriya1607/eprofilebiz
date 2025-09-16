@@ -145,7 +145,7 @@
                             <button id="installPwaBtn" class="pwa-install-button w-50 mb-1 btn">{{
                                 __('messages.pwa.install') }}
                             </button>
-                            <button class="pwa-cancel-button w-50 pwa-close btn btn-secondary mb-1" {{$subscriptionclass}}>{{
+                            <button class="pwa-cancel-button w-50 pwa-close btn btn-secondary mb-1">{{
                                 __('messages.common.cancel') }}</button>
                         </div>
                     </div>
@@ -1197,7 +1197,7 @@
             @endif
             {{-- add to contact --}}
             @if ($vcard->enable_contact)
-            <div class="add-to-contact-section" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+            <div class="add-to-contact-section">
                 <div class="text-center d-flex align-items-center justify-content-center" @if (getLanguage($vcard->
                     default_language) == 'Arabic') dir="rtl" @endif>
                     @if ($contactRequest == 1)
@@ -1218,7 +1218,7 @@
             @endif
 
             {{-- sticky buttons --}}
-            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
                 <div class="fixed-btn-section">
                     <div class="bars-btn travel-bars-btn">
                         {{-- <img src="{{ asset('assets/img/vcard30/sticky.png') }}" /> --}}

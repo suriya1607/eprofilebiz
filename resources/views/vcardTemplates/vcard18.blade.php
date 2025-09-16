@@ -1047,7 +1047,7 @@
                                     @endif
                                     <div class="col-12 text-center mt-3">
                                         <button class="contact-btn send-btn btn btn-primary rounded-2"
-                                            type="submit"{{$subscriptionclass}}>
+                                            type="submit">
                                             {{ __('messages.contact_us.send_message') }}
                                         </button>
                                     </div>
@@ -1136,7 +1136,7 @@
                                     @endif
                                     <div class="col-12 text-center mt-3">
                                         <button class="contact-btn send-btn btn btn-primary rounded-2"
-                                            type="submit" {{$subscriptionclass}}>
+                                            type="submit">
                                             {{ __('messages.contact_us.send_message') }}
                                         </button>
                                     </div>
@@ -1167,7 +1167,7 @@
                 </div>
             @endif
             {{-- add to contact --}}
-            <div class="add-to-contact-section mb-4" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+            <div class="add-to-contact-section mb-4">
                 @if ($vcard->enable_contact)
                     <div class="d-flex align-items-center justify-content-center"
                         @if (getLanguage($vcard->default_language) == 'Arabic') dir="rtl" @endif>
@@ -1189,7 +1189,7 @@
                 @endif
             </div>
             {{-- sticky button --}}
-            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif" @if($subscriptionclass == 'disabled') style="pointer-events:none;opacity:0.5;"@endif>
+            <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
                 <div class="fixed-btn-section">
                     @if (empty($vcard->hide_stickybar))
                         <div
