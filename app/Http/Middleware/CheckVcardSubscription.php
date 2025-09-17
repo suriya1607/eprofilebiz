@@ -27,7 +27,7 @@ class CheckVcardSubscription
         if ($user->subscription->ends_at > Carbon::now()->format('Y-m-d H:i:s')) {
             return $request;
         }
-
+        return $request;
         return abort(404);
     }
 }
