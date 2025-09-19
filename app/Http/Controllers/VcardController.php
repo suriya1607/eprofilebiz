@@ -330,14 +330,8 @@ class VcardController extends AppBaseController
             session(['languageChange_' . $alias => $languageName]);
             setLocalLang(getLocalLanguage());
         }
-        $subscriptionclass = '';
-        $usersubscription = User::whereTenantId($vcard->tenant_id)->with('subscription')->first();
 
-        if ($usersubscription->subscription->ends_at < Carbon::now()->format('Y-m-d H:i:s')) {
-            $subscriptionclass = 'disabled';
-        }
-
-        if ($vcard->status) {
+        // if ($vcard->status) {
             return view(
                 'vcardTemplates.' . $vcard_name,
                 compact(
@@ -373,8 +367,8 @@ class VcardController extends AppBaseController
                     'vcard11TermAndCondition',
                 )
             );
-        }
-        abort('404');
+        // }
+        // abort('404');
     }
 
     public function checkPassword(Request $request, Vcard $vcard): JsonResponse
@@ -441,7 +435,7 @@ class VcardController extends AppBaseController
         return $this->sendSuccess(__('messages.flash.vcard_status'));
     }
 
-    public function updatePwaStatus($id)
+    public function updatePwaStatus($id , Request $request)
     {
         $vcard = Vcard::findOrFail($id);
         $vcard->pwa_status = !$vcard->pwa_status;

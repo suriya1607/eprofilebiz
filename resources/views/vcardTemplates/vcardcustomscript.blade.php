@@ -20,7 +20,7 @@
                        $('.pwa-support').addClass('d-none');
                         console.log('PWA installed, sending AJAX');
 
-                        let updateUrl = route("vcard.pwa.status", vcardId); 
+                        let updateUrl = route("vcard.pwa.status", vcardId) + "?downloadstatus=1"; 
                         $.ajax({
                             type: "get",
                             url: updateUrl,

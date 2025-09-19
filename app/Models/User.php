@@ -420,4 +420,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         // return $this->webhook_url;
         return config('services.slack.webhook_url', $this->webhook_url);
     }
+public function vcard()
+{
+    return $this->hasOne(VCard::class, 'tenant_id', 'tenant_id');
+}
 }
