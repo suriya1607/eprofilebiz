@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\GenerateSiteMap;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\PlanExpirationMailCommand;
+use App\Console\Commands\SendCardNotCreatedReminder;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -16,7 +17,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         GenerateSiteMap::class,
-        PlanExpirationMailCommand::class
+        PlanExpirationMailCommand::class,
+        SendCardNotCreatedReminder::class,
     ];
 
     /**
@@ -27,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('sitemap:generate')->daily();
         $schedule->command(PlanExpirationMailCommand::class)->daily();
         $schedule->command(PlanExpirationMailCommand::class)->daily();
+        $schedule->command(SendCardNotCreatedReminder::class)->daily();
     }
 
     /**
