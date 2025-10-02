@@ -31,6 +31,10 @@
                                 href="{{ route('vcards.create') }}">{{ __('messages.vcard.new_vcard') }}</a>
                         </div>
                     @endif
+                    <div class="form-check form-switch ms-3 mt-2">
+                        <input class="form-check-input" type="checkbox" id="associateSwitch" name="associate_status" {{ auth()->user()->company_type ? 'checked' : '' }}>
+                        <label class="form-check-label ms-2" for="associateSwitch">Associate</label>
+                    </div>
                 </div>
             </div>
             @if (count($vcards) > 0)

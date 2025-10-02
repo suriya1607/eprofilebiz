@@ -25,6 +25,9 @@ class CreateRegisterRequest extends FormRequest
     public function rules(): array
     {
         $rules = User::$rules;
+        if ($this->input('shareduser')) {
+        unset($rules['email']); // removes email rule
+        }
         if (getSuperAdminSettingValue('phone_number_required') == 1) {
             $rules['contact'] = 'required';
         }

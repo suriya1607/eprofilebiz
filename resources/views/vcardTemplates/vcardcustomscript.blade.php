@@ -89,5 +89,56 @@ let greetingmsg = `*Greetings,*\n\nHere's a quick glimpse of my e-profile:\n${cu
             }
         });
         });
+
+
+        $(document).on('change', '.role-check', function () {
+            $('.role-check').not(this).prop('checked', false);
+        });
+        $(document).on('input blur', '#emailField', function () {
+            let email = $(this).val();
+            if (email.length > 0) {
+                $('#vcardSaveBtn').prop('disabled', true);
+            }
+            else{
+                $('#vcardSaveBtn').prop('disabled', false);
+            }
+         });    
+
+        $(document).on('blur', '#emailField', function () {
+        let email = $(this).val();
+        let saveBtn = $('#vcardSaveBtn');
+
+        if (email.length > 0) {
+            saveBtn.prop('disabled', true);
+            $.ajax({
+                url: "{{ route('check.validemail', ':email') }}".replace(':email', email),
+                type: "GET",
+                success: function (response) {
+                    if (response.valid) {
+                        $('#roleSection').removeClass('d-none');
+                        $('.companytype').removeClass('d-none');
+                         saveBtn.prop('disabled', false);
+                    } else {
+                        $('#roleSection').addClass('d-none');
+                        $('.companytype').addClass('d-none');
+                        saveBtn.prop('disabled', true);
+
+                         if (response.exists) {
+                            displayErrorMessage('Email already exists!');
+                        } else {
+                            displayErrorMessage('Invalid email!');
+                        }
+                    }
+                },
+                error: function () {
+                    $('#roleSection').addClass('d-none');
+                     $('.companytype').addClass('d-none');
+                }
+            });
+        }
+        else{
+            saveBtn.prop('disabled', false);
+        }
+    });
     });
 </script>

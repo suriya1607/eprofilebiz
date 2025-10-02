@@ -25,8 +25,11 @@ class VcardLists extends Component
     public function render()
     {
         $vcards = Vcard::with(['tenant.user', 'template'])
+            ->where(function ($query) {
+                $query->where('tenant_id', getLogInTenantId())
+                    ->orWhere('shared_user', Auth::id());
+            })
             ->where('name', 'like', '%' . $this->search . '%')
-            ->where('tenant_id', getLogInTenantId())
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 

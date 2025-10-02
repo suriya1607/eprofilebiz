@@ -40,7 +40,7 @@
                     </a>
                 </li>
             @endif
-            @if (checkFeature('services'))
+            @if (checkFeature('services') && $isAssociate == 1)
                 <li class="nav-item nav-item-1 position-relative">
                     <a class="nav-link-1 nav-link p-3 {{ isset($partName) && $partName == 'services' ? 'active' : '' }}"
                         href="{{ route('vcards.edit', $vcard->id) . '?part=services' }}">
@@ -49,7 +49,7 @@
                     </a>
                 </li>
             @endif
-            @if (checkFeature('products'))
+            @if (checkFeature('products') && $isAssociate == 1)
                 <li class="nav-item nav-item-1 position-relative">
                     <a class="nav-link-1 nav-link p-3 {{ isset($partName) && $partName == 'products' ? 'active' : '' }}"
                         href="{{ route('vcards.edit', $vcard->id) . '?part=products' }}">
@@ -58,7 +58,7 @@
                     </a>
                 </li>
             @endif
-            @if (checkFeature('insta_embed'))
+            @if (checkFeature('insta_embed') && $isAssociate == 1)
                 <li class="nav-item nav-item-1 position-relative">
                     <a class="nav-link-1 nav-link p-3  {{ isset($partName) && $partName == 'instagram-embed' ? 'active' : '' }}"
                         href="{{ route('vcards.edit', $vcard->id) . '?part=instagram-embed' }}">
@@ -161,6 +161,7 @@
                     </a>
                 </li>
             @endif
+             @if($isAssociate == 1)
             <li class="nav-item nav-item-1 position-relative">
                 <a class="nav-link-1 nav-link p-3  {{ isset($partName) && $partName == 'privacy-policy' ? 'active' : '' }}"
                     href="{{ route('vcards.edit', $vcard->id) . '?part=privacy-policy' }}">
@@ -168,18 +169,23 @@
                     {{ __('messages.vcard.privacy_policy') }}
                 </a>
             </li>
+            @endif
+             @if($isAssociate == 1)
             <li class="nav-item nav-item-1 position-relative">
                 <a class="nav-link-1 nav-link p-3  {{ isset($partName) && $partName == 'term-condition' ? 'active' : '' }}"
                     href="{{ route('vcards.edit', $vcard->id) . '?part=term-condition' }}">
                     <i class="fa-solid fa-clipboard-list p-1 icon-color-bs-lightred"></i> {!! __('messages.vcard.term-condition') !!}
                 </a>
             </li>
+            @endif
+            @if($isAssociate == 1)
             <li class="nav-item nav-item-1 position-relative mb-3">
                 <a class="nav-link-1 nav-link p-3  {{ isset($partName) && $partName == 'manage-section' ? 'active' : '' }}"
                     href="{{ route('vcards.edit', $vcard->id) . '?part=manage-section' }}">
                     <i class="fa-solid fa-list-check p-1 icon-color-bs-purple"></i> {!! __('messages.vcard.manage-section') !!}
                 </a>
             </li>
+            @endif
 
         </div>
         @if (planfeaturecount() >= 7)

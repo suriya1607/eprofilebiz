@@ -50,6 +50,7 @@ use App\Http\Controllers\MailSettingController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserPhonepeController;
 use App\Http\Controllers\UserSettingController;
+use App\Http\Controllers\CompanyConfigureController;
 use App\Http\Controllers\NfcCardOrderController;
 use App\Http\Controllers\PaypalPayoutController;
 use App\Http\Controllers\StorageLimitController;
@@ -167,7 +168,7 @@ Route::middleware(['freshInstall'])->group(function () {
         Route::get('/download-attachment/{id}', [SubscriptionController::class, 'downloadAttachment']);
         Route::get('/download-mail-attachment/{id}', [SubscriptionController::class, 'downloadMailAttachment']);
 
-        Route::prefix('admin')->middleware('role:admin')->group(function () {
+        Route::prefix('admin')->middleware('role:admin|user')->group(function () {
 
             Route::middleware('multi_tenant')->group(function () {
 
@@ -434,6 +435,7 @@ Route::middleware(['freshInstall'])->group(function () {
                         [EnquiryController::class, 'index']
                     )->name('enquiry.index')->middleware(['checkVcardEnquiry']);
                     Route::get('/getSlot', [VcardController::class, 'getSlot'])->name('get.slot');
+                    Route::resource('company-configure', CompanyConfigureController::class);
                     Route::get('/user-settings', [UserSettingController::class, 'index'])->name('user.setting.index');
                     Route::get('/payment-method', [UserSettingController::class, 'index'])->name('user.payment.method');
                     Route::post('/user-setting', [UserSettingController::class, 'update'])->name('user.setting.update');
@@ -762,7 +764,7 @@ Route::middleware(['freshInstall'])->group(function () {
     //user delete
     Route::delete('/delete-data/{user}', [UserController::class, 'userDelete'])->name('delete-user');
 
-    Route::prefix('admin')->middleware('subscription', 'auth', 'valid.user', 'role:admin', 'multi_tenant')->group(function () {
+    Route::prefix('admin')->middleware('subscription', 'auth', 'valid.user', 'role:admin|user', 'multi_tenant')->group(function () {
 
         //user delete
 
@@ -803,6 +805,7 @@ Route::middleware(['freshInstall'])->group(function () {
 
         Route::get('/storage', [StorageLimitController::class, 'index'])->name('user.storage');
         Route::post('/storage-chart', [StorageLimitController::class, 'storageChart'])->name('user.storage.chart');
+        Route::post('/ChangeCompanyStatus', [VcardController::class, 'ChangeCompanyStatus'])->name('ChangeCompanyStatus');        
 
     });
     Route::get('delete-account', [VcardController::class, 'deleteAccount'])->name('delete-account');
@@ -1108,6 +1111,7 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::get('{alias}/term-condition/{id}', [VcardController::class, 'show'])->name('vcard.show.term-condition')->middleware('language');
 
     Route::post('{alias}', [VcardController::class, 'emailSubscriprionStore'])->name('emailSubscriprion-store');
+    Route::get('/check-validemail/{email}', [VcardController::class, 'checkEmail'])->name('check.validemail');
 
     Route::get('qr-code/examples/url', function () {
         return QrCode::url('werneckbh.github.io/qr-code/')

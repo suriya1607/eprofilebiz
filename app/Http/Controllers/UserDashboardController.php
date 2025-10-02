@@ -9,8 +9,8 @@ class UserDashboardController extends AppBaseController
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(): \Illuminate\View\View
     {
-        //
+         return view('dashboard.index');
     }
 }

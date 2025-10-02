@@ -60,10 +60,17 @@
                                         <label for="email" class="form-label">
                                             {{ __('messages.user.email') . ':' }}<span class="required"></span>
                                         </label>
-                                        <input name="email" type="email" class="form-control" id="email"
-                                            aria-describedby="email" placeholder=" {{ __('messages.user.email') }}"
-                                            value="{{ old('email') }}" required>
-                                        <span id="email-error-msg" class="text-danger fw-400 fs-small mt-2"></span>
+
+                                        @if(isset($sharedUser) && $sharedUser)
+                                            <input type="email" class="form-control" id="email" 
+                                                value="{{ $sharedUser->email }}" readonly>
+                                            <input type="hidden" name="shareduser" value="{{ $sharedUser->id }}">
+                                        @else
+                                            <input name="email" type="email" class="form-control" id="email"
+                                                aria-describedby="email" placeholder="{{ __('messages.user.email') }}"
+                                                value="{{ old('email') }}" required>
+                                            <span id="email-error-msg" class="text-danger fw-400 fs-small mt-2"></span>
+                                        @endif
                                     </div>
                                     @if (getSuperAdminSettingValue('phone_number_required'))
                                         <div class="col-md-12 mb-4">

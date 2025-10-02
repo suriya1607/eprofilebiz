@@ -21,7 +21,20 @@
 
 @push('scripts')
     <script>
-$(document).on("click", ".vcardPwaStatus", function () {
+        $(document).on("change", "#associateSwitch", function () {
+            let Url = route("ChangeCompanyStatus"); 
+            $.ajax({
+                type: "Post",
+                url: Url,
+                success: function (response) {
+                    displaySuccessMessage(response.message);
+                },
+                error: function (error) {
+                    displayErrorMessage(error.responseJSON.message);
+                },
+            });
+        });
+        $(document).on("click", ".vcardPwaStatus", function () {
             let vcardId = $(this).data("id");
             let updateUrl = route("vcard.pwa.status", vcardId); 
             $.ajax({

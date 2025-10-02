@@ -6,6 +6,8 @@ use App\Models\Vcard;
 use Illuminate\Database\Eloquent\Builder;
 use App\Livewire\LivewireTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserVcardTable extends LivewireTableComponent
 {
@@ -76,7 +78,12 @@ class UserVcardTable extends LivewireTableComponent
 
     public function builder(): Builder
     {
-        return Vcard::with(['tenant.user', 'template'])->where('tenant_id', getLogInTenantId())->select('vcards.*');
+        return Vcard::with(['tenant.user', 'template'])
+        ->where(function ($query) {
+            $query->where('tenant_id', getLogInTenantId())
+                  ->orWhere('shared_user', Auth::id());
+        })
+        ->select('vcards.*');
     }
 
     public function resetPageTable($pageName = 'user-vcard-table')
