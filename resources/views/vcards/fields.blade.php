@@ -72,7 +72,7 @@
                     <div id="vcardDescriptionQuill" class="editor-height" style="height: 200px"></div>
                     {{ Form::hidden('description', isset($vcard) ? $vcard->description : null, ['id' => 'vcardDescriptionData']) }}
                 </div>
-                @if (!isset($vcard))
+                @if (!isset($vcard) && userVcardCount() > 1)
                     <div class="mb-5">
                         <div>
                             {{ Form::label('Invite User Via Mail' . ':', null, ['class' => 'form-label']) }}

@@ -17,10 +17,12 @@
     @include('layouts.templates.actions')
     @include('vcards.templates.templates')
     @include('vcards.templates.analytics')
+    @include('vcardTemplates.vcardcustomscript')
 @endsection
 
 @push('scripts')
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>        
         $(document).on("change", "#associateSwitch", function () {
             let Url = route("ChangeCompanyStatus"); 
             $.ajax({

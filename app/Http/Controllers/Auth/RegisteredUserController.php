@@ -108,6 +108,8 @@ class RegisteredUserController extends AppBaseController
                 'password' => Hash::make($request->password),
                 'tenant_id' => $tenant->id,
                 'affiliate_code' => generateUniqueAffiliateCode(),
+                'user_type' => $request->user_type,
+                'company_type' => $request->has('company_type') ? 1 : 0
             ])->assignRole(Role::ROLE_ADMIN);
 
             $plan = Plan::whereIsDefault(true)->first();
@@ -199,14 +201,14 @@ class RegisteredUserController extends AppBaseController
                           $planPrice = $customFields->first()->custom_vcard_price;
                       }
                   }
-                  $subscription = new Subscription();
-                $subscription->plan_id = $plan->id;
+                $subscription = new Subscription();
+                $subscription->plan_id = $plan->id; // no specific plan
                 $subscription->starts_at = Carbon::now();
-                $subscription->ends_at = $plan->frequency == Plan::UNLIMITED ? Carbon::now()->addYears(100) : Carbon::now()->addDays($plan->trial_days);
-                $subscription->plan_amount = $planPrice;
-                $subscription->plan_frequency = $plan->frequency;
-                $subscription->trial_ends_at = $plan->frequency == Plan::UNLIMITED ? Carbon::now()->addYears(100) : Carbon::now()->addDays($plan->trial_days);
-                $subscription->no_of_vcards = $vcardOfNo;
+                $subscription->ends_at = Carbon::now()->addYears(100); // unlimited
+                $subscription->plan_amount = 0; // price 0
+                $subscription->plan_frequency = Plan::UNLIMITED;
+                $subscription->trial_ends_at = Carbon::now()->addYears(100);
+                $subscription->no_of_vcards = 0; // no vcards
                 $subscription->tenant_id = $tenant->id;
                 $subscription->status = Subscription::ACTIVE;
                 $subscription->saveQuietly();

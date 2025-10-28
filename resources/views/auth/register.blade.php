@@ -116,6 +116,22 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <!-- Dropdown for selecting Individual or Company -->
+                                    <div class="col-md-12 mb-4">
+                                        <label for="user_type" class="form-label">User Type:<span class="required"></span></label>
+                                        <select id="user_type" name="user_type" class="form-control" required>
+                                            <option value="1">Individual</option>
+                                            <option value="2">Company</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Section for Company -->
+                                    <div id="company_div" class="col-md-12 mb-4" style="display:none;">
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" value="1" id="is_associative" name="company_type">
+                                            <label class="form-check-label" for="is_associative">Associative?</label>
+                                        </div>
+                                    </div>
                                     <div class="col-md-12 mb-4 element">
                                         <div class="form-check">
                                             <input type="checkbox" name="term_policy_check" class="form-check-input"
@@ -192,3 +208,18 @@
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+   $(document).ready(function() {
+    $('#user_type').change(function() {
+        console.log($(this).val());
+        if ($(this).val() == 2) {
+            $('#company_div').show();
+        } else {
+            $('#company_div').hide();
+        }
+    });
+    $('#user_type').trigger('change');
+});
+</script>
+

@@ -2794,6 +2794,14 @@ if (!function_exists('userVcardCount')) {
     }
 }
 
+if (!function_exists('isSharedUser')) {
+    function isSharedUser(): bool
+    {
+        $isSharedUser = Vcard::withoutGlobalScopes()->where('shared_user', Auth::id())->exists();
+        return $isSharedUser;
+    }
+}
+
 if (!function_exists('checkTotalWhatsappStore')){
     function checkTotalWhatsappStore(): bool
     {

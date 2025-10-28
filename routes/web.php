@@ -805,7 +805,8 @@ Route::middleware(['freshInstall'])->group(function () {
 
         Route::get('/storage', [StorageLimitController::class, 'index'])->name('user.storage');
         Route::post('/storage-chart', [StorageLimitController::class, 'storageChart'])->name('user.storage.chart');
-        Route::post('/ChangeCompanyStatus', [VcardController::class, 'ChangeCompanyStatus'])->name('ChangeCompanyStatus');        
+        Route::post('/ChangeCompanyStatus', [VcardController::class, 'ChangeCompanyStatus'])->name('ChangeCompanyStatus');  
+        Route::post('/CardUserExit', [VcardController::class, 'CardUserExit'])->name('CardUserExit');      
 
     });
     Route::get('delete-account', [VcardController::class, 'deleteAccount'])->name('delete-account');

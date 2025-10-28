@@ -731,7 +731,7 @@
 @pushOnce('scripts')
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script>
-        let mercadoPagoPublicKey = new MercadoPago("{{ getSelectedPaymentGateway('mp_public_key') }}");
+        // let mercadoPagoPublicKey = new MercadoPago("{{ getSelectedPaymentGateway('mp_public_key') }}");
 
         let options = {
             'key': "{{ getSelectedPaymentGateway('razorpay_key') }}",

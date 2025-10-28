@@ -102,7 +102,7 @@
     if(auth()->check()) {
         if(auth()->user()->hasRole(\App\Models\Role::ROLE_ADMIN) && userVcardCount() > 1) {
             $user_id = getLogInUser()->id;
-        } elseif(auth()->user()->hasRole(\App\Models\Role::ROLE_USER)) {
+        } elseif(isSharedUser()) {
            $shared_user = \App\Models\Vcard::withoutGlobalScopes()->where('shared_user', getLogInUser()->id)->value('tenant_id');
            $user_id =  \App\Models\User::withoutGlobalScopes()->where('tenant_id', $shared_user)->value('id');
         }

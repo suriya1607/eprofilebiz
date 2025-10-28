@@ -981,6 +981,33 @@ class VcardController extends AppBaseController
         ], 401);
     }
 
-    
+    public function CardUserExit(Request $request)
+    {
+        $sharedUserId = Vcard::where('id', $request->vcardid)->value('shared_user');
+
+        if ($sharedUserId) {
+            if ($request->email) {
+                $user = \App\Models\User::withoutGlobalScopes()->find($sharedUserId);
+                if ($user) {
+                    $user->email = $request->email;
+                    $user->save();
+                    return response()->json(
+                    ['status' => 'success', 'message' => 'Email updated successfully'],
+                    200
+                    );
+                } else {
+                    return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+                }
+            } else {
+                User::where('id', $sharedUserId)->delete();
+                Vcard::where('id', $request->vcardid)->delete();
+                return response()->json(
+                ['status' => 'success', 'message' => 'User and Vcard deleted successfully'],
+                200
+                );}
+        }
+        return response()->json(['status' => 'error', 'message' => 'Shared user not found'], 404);
+    }
+
 
 }
