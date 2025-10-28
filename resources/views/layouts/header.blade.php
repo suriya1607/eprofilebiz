@@ -98,6 +98,19 @@
         </li>
         @endImpersonating
 
+        @php
+    if(auth()->check()) {
+        if(auth()->user()->hasRole(\App\Models\Role::ROLE_ADMIN) && userVcardCount() > 1) {
+            $user_id = getLogInUser()->id;
+        } elseif(isSharedUser()) {
+           $shared_user = \App\Models\Vcard::withoutGlobalScopes()->where('shared_user', getLogInUser()->id)->value('tenant_id');
+           $user_id =  \App\Models\User::withoutGlobalScopes()->where('tenant_id', $shared_user)->value('id');
+        }
+        if(isset($user_id))
+        $companyname = \App\Models\CompanyConfigure::where('user_id', $user_id)->value('name');
+    }
+@endphp
+ <?php //echo '<pre>';print_r($companyname);exit; ?> 
         <li class="px-xxl-3 px-2">
             <div class="dropdown d-flex align-items-center py-4">
                 <div class="image image-circle image-mini">
@@ -107,6 +120,10 @@
                 <button class="btn dropdown-toggle ps-2 pe-0" type="button" id="dropdownMenuButton1"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                     {!! getLogInUser()->full_name !!}
+                    @if(isset($companyname))
+                    <br>
+                    <small class="text-muted ms-1">{{$companyname}}</small>
+                    @endif
                 </button>
                 <div class="dropdown-menu py-7 pb-4 my-2" aria-labelledby="dropdownMenuButton1" data-bs-auto-close="outside" style="z-index: 999999">
                     <div class="text-center border-bottom pb-5">

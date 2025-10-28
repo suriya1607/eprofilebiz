@@ -36,6 +36,7 @@ use Mail;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Log;
+use App\Models\CompanyConfigure;
 
 /**
  * Class UserRepository
@@ -82,11 +83,18 @@ class UserRepository extends BaseRepository
 
             $input['tenant_id'] = $tenant->id;
             $input['language'] = $userDefaultLanguage;
+            if(isset($input['password'])){
             $input['password'] = Hash::make($input['password']);
+            }
             if (isset($input['role'])) {
                 $user = User::create($input)->assignRole(Role::ROLE_SUPER_ADMIN);
                 $user->email_verified_at = Carbon::now();
                 $user->is_active = true;
+                $user->save();
+            } elseif(isset($input['vcardroles'])){
+                $role = Role::find($input['vcardroles'][0]);
+                $input['affiliate_code'] = generateUniqueAffiliateCode();
+                $user = User::create($input)->assignRole($role->name);
                 $user->save();
             } else {
                 $input['affiliate_code'] = generateUniqueAffiliateCode();
@@ -100,8 +108,12 @@ class UserRepository extends BaseRepository
             if (isset($input['profile']) && !empty($input['profile'])) {
                 $user->addMedia($input['profile'])->toMediaCollection(User::PROFILE, config('app.media_disc'));
             }
-
-            if (!isset($input['is_admin'])) {
+            if(isset($input['vcardroles'])){
+                $input['shared_by'] = CompanyConfigure::where('user_id', Auth::id())->value('name');
+                $input['url'] = url('register?id=' . $user->id);
+                Mail::to($user->email)->send(new VerifyMail($input));
+            }
+            else if (!isset($input['is_admin'])) {
                 $user->sendEmailVerificationNotification();
             }
             if (isset($input['plan_id'])) {

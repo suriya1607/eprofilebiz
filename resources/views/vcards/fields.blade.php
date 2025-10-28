@@ -72,7 +72,32 @@
                     <div id="vcardDescriptionQuill" class="editor-height" style="height: 200px"></div>
                     {{ Form::hidden('description', isset($vcard) ? $vcard->description : null, ['id' => 'vcardDescriptionData']) }}
                 </div>
+                @if (!isset($vcard) && userVcardCount() > 1)
+                    <div class="mb-5">
+                        <div>
+                            {{ Form::label('Invite User Via Mail' . ':', null, ['class' => 'form-label']) }}
+                            {{ Form::text('email', null, [
+                                'class' => 'form-control',
+                                'id' => 'emailField',
+                                'placeholder' => __('messages.form.email')
+                            ]) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-5 d-none" id="roleSection">
+                        <label class="form-label">Assign Role</label><br>
+                        <div class="form-check">
+                            <input class="form-check-input role-check" type="checkbox" name="roles[]" value="2" id="roleAdmin">
+                            <label class="form-check-label" for="roleAdmin">Admin</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input role-check" type="checkbox" name="roles[]" value="3" id="roleUser" checked>
+                            <label class="form-check-label" for="roleUser">User</label>
+                        </div>
+                    </div>                    
+                @endif
             </div>
+                       
             <div class="col-lg-6 mb-7">
                 <div class="row">
                     <div class="col-lg-6 col-sm-8 mb-7">

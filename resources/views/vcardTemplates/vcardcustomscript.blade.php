@@ -89,5 +89,143 @@ let greetingmsg = `*Greetings,*\n\nHere's a quick glimpse of my e-profile:\n${cu
             }
         });
         });
+
+
+        $(document).on('change', '.role-check', function () {
+            $('.role-check').not(this).prop('checked', false);
+        });
+        $(document).on('input blur', '#emailField', function () {
+            let email = $(this).val();
+            if (email.length > 0) {
+                $('#vcardSaveBtn').prop('disabled', true);
+            }
+            else{
+                $('#vcardSaveBtn').prop('disabled', false);
+            }
+         });    
+
+        $(document).on('blur', '#emailField', function () {
+        let email = $(this).val();
+        let saveBtn = $('#vcardSaveBtn');
+
+        if (email.length > 0) {
+            saveBtn.prop('disabled', true);
+            $.ajax({
+                url: "{{ route('check.validemail', ':email') }}".replace(':email', email),
+                type: "GET",
+                success: function (response) {
+                    if (response.valid) {
+                        $('#roleSection').removeClass('d-none');
+                        $('.companytype').removeClass('d-none');
+                         saveBtn.prop('disabled', false);
+                    } else {
+                        $('#roleSection').addClass('d-none');
+                        $('.companytype').addClass('d-none');
+                        saveBtn.prop('disabled', true);
+
+                         if (response.exists) {
+                            displayErrorMessage('Email already exists!');
+                        } else {
+                            displayErrorMessage('Invalid email!');
+                        }
+                    }
+                },
+                error: function () {
+                    $('#roleSection').addClass('d-none');
+                     $('.companytype').addClass('d-none');
+                }
+            });
+        }
+        else{
+            saveBtn.prop('disabled', false);
+        }
+    });
+    });
+
+    // vcard exit 
+    $(document).on('click', '.vcard_exit-btn', function(event) {
+        event.preventDefault();
+        let vcardExitId = $(event.currentTarget).attr('data-id');
+
+        Swal.fire({
+            title: "Exit!",
+            text: "Transfer and exit?",
+            input: "text", 
+            inputLabel: "Type email to transfer or skip to erase all data",
+            inputPlaceholder: "Enter email",
+            showCancelButton: true,
+            confirmButtonText: "Confirm Exit",
+            cancelButtonText: "No",
+            confirmButtonColor: "#009ef7",
+            didOpen: () => {
+                const confirmBtn = Swal.getConfirmButton();
+                const inputElm = Swal.getInput();
+
+                // Enable confirm if blank initially
+                confirmBtn.disabled = !!inputElm.value;
+
+                const validateEmail = (email) => {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return emailRegex.test(email);
+                };
+
+                $(inputElm).on('input', function() {
+                    let email = $(this).val().trim();
+                    Swal.resetValidationMessage();
+
+                    if (email === "") {
+                        confirmBtn.disabled = false;
+                        return;
+                    }
+
+                    confirmBtn.disabled = true;
+
+                    if (!validateEmail(email)) {
+                        Swal.showValidationMessage('Please enter a valid email');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "{{ route('check.validemail', ':email') }}".replace(':email', encodeURIComponent(email)),
+                        type: "GET",
+                        success: function(response) {
+                            if (response.valid) {
+                                Swal.resetValidationMessage();
+                                confirmBtn.disabled = false;
+                            } else {
+                                Swal.showValidationMessage(response.exists ? 'Email already exists!' : 'Invalid email!');
+                                confirmBtn.disabled = true;
+                            }
+                        },
+                        error: function() {
+                            Swal.showValidationMessage('Error validating email. Please try again.');
+                            confirmBtn.disabled = true;
+                        }
+                    });
+                });
+            },
+            preConfirm: (email) => {
+                // Always allow blank or validated email
+                return email;
+            }
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                let url = route("CardUserExit");
+                $.ajax({
+                url: url,
+                type: "POST",
+                data: { email: result.value ,vcardid: vcardExitId},
+                success: function(response) {
+                    console.log(response);
+                    // return false;
+                    Swal.fire("Success", response.message || "Exited!", "success");
+                },
+                error: function(xhr) {
+                    console.log(xhr,'xhr');
+                    Swal.fire("Error", "Ajax failed or server error.", "error");
+                }
+            });
+            }
+        });
     });
 </script>

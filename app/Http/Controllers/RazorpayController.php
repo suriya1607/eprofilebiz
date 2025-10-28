@@ -56,7 +56,7 @@ class RazorpayController extends AppBaseController
         $subscription = $data['subscription'];
         $api = new Api(getSelectedPaymentGateway('razorpay_key'), getSelectedPaymentGateway('razorpay_secret'));
         $orderData = [
-            'receipt' => 1,
+            'receipt' => (string) 1,
             'amount' => $data['amountToPay'] * 100,
             'currency' => $subscription->plan->currency->currency_code,
             'notes' => [

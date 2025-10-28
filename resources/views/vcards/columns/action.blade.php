@@ -44,12 +44,21 @@
                     </a>
                 </li>
             @endif
+            @if(isset($row->shared_user))
+            <li>
+                <a href="javascript:void(0)" data-id="{{ $row->id }}" title="{{ __('messages.common.delete') }}"
+                    class="btn p-1 fs-6 d-flex align-items-center text-danger vcard_exit-btn">
+                    <i class="fa-solid fa-trash fs-4 me-2"></i>Exit
+                </a>
+            </li>
+            @else
             <li>
                 <a href="javascript:void(0)" data-id="{{ $row->id }}" title="{{ __('messages.common.delete') }}"
                     class="btn p-1 fs-6 d-flex align-items-center text-danger  vcard_delete-btn">
                     <i class="fa-solid fa-trash fs-4 me-2"></i>&nbsp;{{ __('messages.common.delete') }}
                 </a>
             </li>
+            @endif
         </ul>
     </div>
 </div>

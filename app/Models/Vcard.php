@@ -204,7 +204,8 @@ class Vcard extends Model implements HasMedia
         'youtube_link',
         'cover_type',
         'pwa_status',
-        'is_downloaded'
+        'is_downloaded',
+        'shared_user',
     ];
 
     protected $casts = [

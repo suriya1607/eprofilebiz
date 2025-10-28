@@ -26,21 +26,29 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Laracasts\Flash\Flash;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+
 
 class RegisteredUserController extends AppBaseController
 {
     /**
      * @return Application|Factory|\Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
         $registerImage = Setting::where('key', 'register_image')->value('value');
 
         if (!getSuperAdminSettingValue('register_enable')) {
             return redirect()->back();
         }
+        $sharedUser = null;
+        if ($request->has('id')) {
+            $sharedUser = User::find($request->id);
+        }
 
-        return view('auth.register', ['registerImage' => $registerImage]);
+        return view('auth.register', ['registerImage' => $registerImage,'sharedUser' => $sharedUser,]);
     }
 
     /**
@@ -54,6 +62,9 @@ class RegisteredUserController extends AppBaseController
         $referral_user = '';
         if ($referral_code) {
             $referral_user = User::where('affiliate_code', $referral_code)->first();
+        }
+        if($request->shareduser){
+            return $this->updateinviteuser($request);
         }
         try {
             DB::beginTransaction();
@@ -97,6 +108,8 @@ class RegisteredUserController extends AppBaseController
                 'password' => Hash::make($request->password),
                 'tenant_id' => $tenant->id,
                 'affiliate_code' => generateUniqueAffiliateCode(),
+                'user_type' => $request->user_type,
+                'company_type' => $request->has('company_type') ? 1 : 0
             ])->assignRole(Role::ROLE_ADMIN);
 
             $plan = Plan::whereIsDefault(true)->first();
@@ -160,4 +173,51 @@ class RegisteredUserController extends AppBaseController
         }
         return $this->sendSuccess('Email not exists.');
     }
+     public function updateinviteuser($request){
+        $user = User::find($request->shareduser);
+        if($user){
+            $tenant = MultiTenant::create(['tenant_username' => $request->first_name]);
+            $userDefaultLanguage = Setting::where('key', 'user_default_language')->first()->value ?? 'en';
+            $user->update([
+            'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                // 'email' => $request->email,
+                'region_code' =>  $request->region_code,
+                'contact' =>  $request->contact,
+                'language' => $userDefaultLanguage,
+                'steps' => 1,
+                'email_verified_at' =>  Carbon::now(),
+                'password' => Hash::make($request->password),
+                'tenant_id' => $tenant->id,
+        ]);
+        $plan = Plan::whereIsDefault(true)->first();
+         $vcardOfNo = $plan->no_of_vcards;
+                  $planPrice = $plan->price;
+
+                  if ($plan->custom_select == 1) {
+                      $customFields = $plan->planCustomFields;
+                      if ($customFields->isNotEmpty()) {
+                          $vcardOfNo = $customFields->first()->custom_vcard_number;
+                          $planPrice = $customFields->first()->custom_vcard_price;
+                      }
+                  }
+                $subscription = new Subscription();
+                $subscription->plan_id = $plan->id; // no specific plan
+                $subscription->starts_at = Carbon::now();
+                $subscription->ends_at = Carbon::now()->addYears(100); // unlimited
+                $subscription->plan_amount = 0; // price 0
+                $subscription->plan_frequency = Plan::UNLIMITED;
+                $subscription->trial_ends_at = Carbon::now()->addYears(100);
+                $subscription->no_of_vcards = 0; // no vcards
+                $subscription->tenant_id = $tenant->id;
+                $subscription->status = Subscription::ACTIVE;
+                $subscription->saveQuietly();
+                Auth::login($user);
+
+        return redirect()->route('vcards.index');
+        }
+        Flash::error('User not found.');
+    return redirect()->back();
+
+     }
 }

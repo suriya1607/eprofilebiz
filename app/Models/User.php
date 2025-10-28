@@ -114,6 +114,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         'language',
         'tenant_id',
         'vcard_table_view_type',
+        'user_type',
+        'company_type',
     ];
 
     protected $casts = [

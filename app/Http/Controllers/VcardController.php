@@ -51,6 +51,8 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use URL;
 use Modules\SlackIntegration\Entities\SlackIntegration;
 use Modules\SlackIntegration\Notifications\SlackNotification;
+use App\Repositories\UserRepository;
+
 
 class VcardController extends AppBaseController
 {
@@ -143,7 +145,19 @@ class VcardController extends AppBaseController
             }
         }
         $input = $request->all();
+        // dd($input);exit;
+        if (!empty($input['email'])) {
+        $userrequest['first_name'] = $input['name'];
+        $userrequest['last_name']  = $input['name'];
+        $userrequest['email']      = $input['email'];
+        $userrequest['vcardroles'] = $input['roles'];
 
+        $userRepository = app(UserRepository::class);
+        $vacrdshareduser = $userRepository->store($userrequest);
+        if($vacrdshareduser){
+            $input['shared_user'] = $vacrdshareduser->id;
+        }
+        }
         $vcard = $this->vcardRepository->store($input);
 
         Flash::success(__('messages.flash.vcard_create'));
@@ -414,8 +428,12 @@ class VcardController extends AppBaseController
         }
         $favicon = $settings['favicon'];
         $adminFavicon = $favicon->favicon_url;
-
-        return view('vcards.edit', compact('appointmentDetail', 'privacyPolicy', 'termCondition', 'iframes', 'managesection', 'instagramEmbed', 'banners', 'dynamicVcard', 'customLink','adminFavicon',))->with($data);
+        $isAssociate = 1;
+        
+        if($data['vcard']->shared_user && Auth::id() == ($data['vcard']->shared_user)){
+            $isAssociate = User::withoutGlobalScopes()->where('tenant_id',$data['vcard']->tenant_id)->pluck('company_type')->first();
+        }
+        return view('vcards.edit', compact('appointmentDetail', 'privacyPolicy', 'termCondition', 'iframes', 'managesection', 'instagramEmbed', 'banners', 'dynamicVcard', 'customLink','adminFavicon','isAssociate',))->with($data);
     }
 
     public function updateStatus(Vcard $vcard): JsonResponse
@@ -933,4 +951,63 @@ class VcardController extends AppBaseController
             throw new UnprocessableEntityHttpException($e->getMessage());
         }
     }
+
+    public function checkEmail($email)
+    {
+        $isValid = filter_var($email, FILTER_VALIDATE_EMAIL);
+        $exists  = \App\Models\User::where('email', $email)->exists();
+
+        return response()->json([
+            'valid' => $isValid && !$exists,
+            'exists' => $exists,
+        ]);
+    }
+    public function ChangeCompanyStatus()
+    {
+        $user = auth()->user();
+
+        if ($user) {
+            $user->company_type = $user->company_type ? 0 : 1;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Company status updated successfully',
+                'company_type' => $user->company_type,
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'User not authenticated'
+        ], 401);
+    }
+
+    public function CardUserExit(Request $request)
+    {
+        $sharedUserId = Vcard::where('id', $request->vcardid)->value('shared_user');
+
+        if ($sharedUserId) {
+            if ($request->email) {
+                $user = \App\Models\User::withoutGlobalScopes()->find($sharedUserId);
+                if ($user) {
+                    $user->email = $request->email;
+                    $user->save();
+                    return response()->json(
+                    ['status' => 'success', 'message' => 'Email updated successfully'],
+                    200
+                    );
+                } else {
+                    return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+                }
+            } else {
+                User::where('id', $sharedUserId)->delete();
+                Vcard::where('id', $request->vcardid)->delete();
+                return response()->json(
+                ['status' => 'success', 'message' => 'User and Vcard deleted successfully'],
+                200
+                );}
+        }
+        return response()->json(['status' => 'error', 'message' => 'Shared user not found'], 404);
+    }
+
+
 }
