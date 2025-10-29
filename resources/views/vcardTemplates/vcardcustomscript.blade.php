@@ -143,89 +143,181 @@ let greetingmsg = `*Greetings,*\n\nHere's a quick glimpse of my e-profile:\n${cu
     });
 
     // vcard exit 
+    // $(document).on('click', '.vcard_exit-btn', function(event) {
+    //     event.preventDefault();
+    //     let vcardExitId = $(event.currentTarget).attr('data-id');
+
+    //     Swal2.fire({
+    //         title: "Exit!",
+    //         text: "Transfer and exit?",
+    //         input: "text", 
+    //         inputLabel: "Type email to transfer or skip to erase all data",
+    //         inputPlaceholder: "Enter email",
+    //         showCancelButton: true,
+    //         confirmButtonText: "Confirm Exit",
+    //         cancelButtonText: "No",
+    //         confirmButtonColor: "#009ef7",
+    //         didOpen: () => {
+    //             const confirmBtn = Swal2.getConfirmButton();
+    //             const inputElm = Swal2.getInput();
+
+    //             // Enable confirm if blank initially
+    //             confirmBtn.disabled = !!inputElm.value;
+
+    //             const validateEmail = (email) => {
+    //                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //                 return emailRegex.test(email);
+    //             };
+
+    //             $(inputElm).on('input', function() {
+    //                 let email = $(this).val().trim();
+    //                 Swal2.resetValidationMessage();
+
+    //                 if (email === "") {
+    //                     confirmBtn.disabled = false;
+    //                     return;
+    //                 }
+
+    //                 confirmBtn.disabled = true;
+
+    //                 if (!validateEmail(email)) {
+    //                     Swal2.showValidationMessage('Please enter a valid email');
+    //                     return;
+    //                 }
+
+    //                 $.ajax({
+    //                     url: "{{ route('check.validemail', ':email') }}".replace(':email', encodeURIComponent(email)),
+    //                     type: "GET",
+    //                     success: function(response) {
+    //                         if (response.valid) {
+    //                             Swal2.resetValidationMessage();
+    //                             confirmBtn.disabled = false;
+    //                         } else {
+    //                             Swal2.showValidationMessage(response.exists ? 'Email already exists!' : 'Invalid email!');
+    //                             confirmBtn.disabled = true;
+    //                         }
+    //                     },
+    //                     error: function() {
+    //                         Swal2.showValidationMessage('Error validating email. Please try again.');
+    //                         confirmBtn.disabled = true;
+    //                     }
+    //                 });
+    //             });
+    //         },
+    //         preConfirm: (email) => {
+    //             // Always allow blank or validated email
+    //             return email;
+    //         }
+    //     }).then(function(result) {
+    //         if (result.isConfirmed) {
+    //             let url = route("CardUserExit");
+    //             $.ajax({
+    //             url: url,
+    //             type: "POST",
+    //             data: { email: result.value ,vcardid: vcardExitId},
+    //             success: function(response) {
+    //                 console.log(response);
+    //                 // return false;
+    //                 Swal2.fire("Success", response.message || "Exited!", "success");
+    //             },
+    //             error: function(xhr) {
+    //                 console.log(xhr,'xhr');
+    //                 Swal2.fire("Error", "Ajax failed or server error.", "error");
+    //             }
+    //         });
+    //         }
+    //     });
+    // });
     $(document).on('click', '.vcard_exit-btn', function(event) {
-        event.preventDefault();
-        let vcardExitId = $(event.currentTarget).attr('data-id');
+    event.preventDefault();
 
-        Swal.fire({
-            title: "Exit!",
-            text: "Transfer and exit?",
-            input: "text", 
-            inputLabel: "Type email to transfer or skip to erase all data",
-            inputPlaceholder: "Enter email",
-            showCancelButton: true,
-            confirmButtonText: "Confirm Exit",
-            cancelButtonText: "No",
-            confirmButtonColor: "#009ef7",
-            didOpen: () => {
-                const confirmBtn = Swal.getConfirmButton();
-                const inputElm = Swal.getInput();
+    // Load SweetAlert2 dynamically only when needed
+    if (typeof Swal2 === 'undefined') {
+        let script = document.createElement('script');
+        script.src = "https://cdn.jsdelivr.net/npm/sweetalert2@11";
+        script.onload = () => {
+            window.Swal2 = window.Swal;
+            Swal2Handler(event); // call the alert once loaded
+        };
+        document.head.appendChild(script);
+    } else {
+        Swal2Handler(event); // already loaded
+    }
+});
 
-                // Enable confirm if blank initially
-                confirmBtn.disabled = !!inputElm.value;
+function Swal2Handler(event) {
+    let vcardExitId = $(event.currentTarget).attr('data-id');
 
-                const validateEmail = (email) => {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    return emailRegex.test(email);
-                };
+    Swal2.fire({
+        title: "Exit!",
+        text: "Transfer and exit?",
+        input: "text",
+        inputLabel: "Type email to transfer or skip to erase all data",
+        inputPlaceholder: "Enter email",
+        showCancelButton: true,
+        confirmButtonText: "Confirm Exit",
+        cancelButtonText: "No",
+        confirmButtonColor: "#009ef7",
+        didOpen: () => {
+            const confirmBtn = Swal2.getConfirmButton();
+            const inputElm = Swal2.getInput();
 
-                $(inputElm).on('input', function() {
-                    let email = $(this).val().trim();
-                    Swal.resetValidationMessage();
+            confirmBtn.disabled = !!inputElm.value;
 
-                    if (email === "") {
-                        confirmBtn.disabled = false;
-                        return;
-                    }
+            const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-                    confirmBtn.disabled = true;
+            $(inputElm).on('input', function() {
+                let email = $(this).val().trim();
+                Swal2.resetValidationMessage();
 
-                    if (!validateEmail(email)) {
-                        Swal.showValidationMessage('Please enter a valid email');
-                        return;
-                    }
+                if (email === "") {
+                    confirmBtn.disabled = false;
+                    return;
+                }
 
-                    $.ajax({
-                        url: "{{ route('check.validemail', ':email') }}".replace(':email', encodeURIComponent(email)),
-                        type: "GET",
-                        success: function(response) {
-                            if (response.valid) {
-                                Swal.resetValidationMessage();
-                                confirmBtn.disabled = false;
-                            } else {
-                                Swal.showValidationMessage(response.exists ? 'Email already exists!' : 'Invalid email!');
-                                confirmBtn.disabled = true;
-                            }
-                        },
-                        error: function() {
-                            Swal.showValidationMessage('Error validating email. Please try again.');
+                confirmBtn.disabled = true;
+
+                if (!validateEmail(email)) {
+                    Swal2.showValidationMessage('Please enter a valid email');
+                    return;
+                }
+
+                $.ajax({
+                    url: "{{ route('check.validemail', ':email') }}".replace(':email', encodeURIComponent(email)),
+                    type: "GET",
+                    success: function(response) {
+                        if (response.valid) {
+                            Swal2.resetValidationMessage();
+                            confirmBtn.disabled = false;
+                        } else {
+                            Swal2.showValidationMessage(response.exists ? 'Email already exists!' : 'Invalid email!');
                             confirmBtn.disabled = true;
                         }
-                    });
+                    },
+                    error: function() {
+                        Swal2.showValidationMessage('Error validating email. Please try again.');
+                        confirmBtn.disabled = true;
+                    }
                 });
-            },
-            preConfirm: (email) => {
-                // Always allow blank or validated email
-                return email;
-            }
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                let url = route("CardUserExit");
-                $.ajax({
+            });
+        },
+        preConfirm: (email) => email
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            let url = route("CardUserExit");
+            $.ajax({
                 url: url,
                 type: "POST",
-                data: { email: result.value ,vcardid: vcardExitId},
+                data: { email: result.value, vcardid: vcardExitId },
                 success: function(response) {
-                    console.log(response);
-                    // return false;
-                    Swal.fire("Success", response.message || "Exited!", "success");
+                    Swal2.fire("Success", response.message || "Exited!", "success");
                 },
-                error: function(xhr) {
-                    console.log(xhr,'xhr');
-                    Swal.fire("Error", "Ajax failed or server error.", "error");
+                error: function() {
+                    Swal2.fire("Error", "Ajax failed or server error.", "error");
                 }
             });
-            }
-        });
+        }
     });
+}
+
 </script>
