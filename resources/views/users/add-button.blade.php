@@ -26,6 +26,12 @@
 </div>
 </div>
 
-<div>
-    <a type="button" class="btn btn-primary ms-auto" href="{{ route('users.create')}}">{{__('messages.user.add_user')}}</a>
+<div class="d-flex align-items-center">
+    <a type="button" class="btn btn-primary" href="{{ route('users.create') }}">
+        {{ __('messages.user.add_user') }}
+    </a>
+
+    <div class="ms-3">
+        <livewire:user-import />
+    </div>
 </div>

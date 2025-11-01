@@ -41,6 +41,9 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Modules\SlackIntegration\Entities\SlackIntegration;
 use Modules\SlackIntegration\Notifications\SlackNotification;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends AppBaseController
 {
@@ -316,5 +319,99 @@ class UserController extends AppBaseController
 
         return response()->json(['message' => 'Steps updated successfully']);
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt',
+        ]);
+
+        $uploadedFile = $request->file('file');
+        $file = fopen($uploadedFile->getRealPath(), 'r');
+
+        $header = fgetcsv($file);
+        $errors = [];
+        $validRows = [];
+
+        while (($row = fgetcsv($file)) !== false) {
+            $input = array_combine($header, $row);
+            $mapped = [
+                'first_name' => $input['First Name'] ?? null,
+                'last_name'  => $input['Last Name'] ?? null,
+                'email'      => $input['Email'] ?? null,
+                // 'contact'    => $input['Contact No'] ?? null,
+                'password'   => $input['Password'] ?? null,
+            ];
+
+            // 2. Validation rules per row
+            $validator = Validator::make($mapped, [
+                'first_name' => 'required|string|max:100',
+                'last_name'  => 'required|string|max:100',
+                'email'      => 'required|email|unique:users,email',
+                // 'contact'    => ['required','regex:/^\+\d{1,3}\d{7,15}$/'], // +91XXXXXXXXXX format
+                'password'   => [
+                    'required',
+                    'min:6',
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/'
+                ],
+            ], [
+                'contact.regex'   => 'Contact number must include country code (e.g. +91XXXXXXXXXX).',
+                'password.regex'  => 'Password must contain uppercase, lowercase, number, special char.',
+            ]);
+
+            if ($validator->fails()) {
+                $rowWithError = $input;
+                $rowWithError['Errors'] = implode(' | ', $validator->errors()->all());
+                $errors[] = $rowWithError;
+            } else {
+                $mapped['password'] = Hash::make($mapped['password']);
+                $validRows[] = $mapped;
+
+                $this->userRepo->store($mapped);
+            }
+        }
+        fclose($file);
+
+        if (count($errors) > 0) {
+                $errorDir = storage_path('app/imports');
+        if (!is_dir($errorDir)) {
+            mkdir($errorDir, 0777, true);
+        }
+            $errorFile = 'imports/errors_' . time() . '.csv';
+            $handle = fopen(storage_path('app/' . $errorFile), 'w');
+
+            fputcsv($handle, array_merge($header, ['Errors']));
+
+            foreach ($errors as $errRow) {
+                fputcsv($handle, $errRow);
+            }
+
+            fclose($handle);
+
+            return response()->download(storage_path('app/' . $errorFile))->deleteFileAfterSend(true);
+        }
+
+            Flash::success(count($validRows).' Users Imported Successfully!');
+            return redirect()->back();
+    }
+
+
+
+    public function downloadSampleCSV()
+    {
+        $columns = ['First Name', 'Last Name','Email','Password'];
+
+        $callback = function() use ($columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, [
+            'Content-Type'        => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="sample_users.csv"',
+        ]);
+    }
+
 
 }

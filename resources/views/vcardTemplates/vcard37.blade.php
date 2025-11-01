@@ -1364,7 +1364,7 @@
             {{-- sticky buttons --}}
             <div class="btn-section cursor-pointer @if (getLanguage($vcard->default_language) == 'Arabic') rtl @endif">
                 <div class="fixed-btn-section">
-                    <div
+                    <div style="width: 70px; height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: 12px;"
                         class="bars-btn flower-garden-bars-btn @if (getLanguage($vcard->default_language) == 'Arabic') vcard-bars-btn-left @endif">
                         {{-- <img src="{{ asset('assets/img/vcard30/sticky.png') }}" /> --}}
                         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1381,23 +1381,13 @@
                                 d="M16.2537 13.783H22.0282C23.3874 13.783 24.4996 14.8874 24.4996 16.2544V22.0289C24.4996 23.387 23.3863 24.5003 22.0282 24.5003H16.2537C14.8867 24.5003 13.7823 23.3881 13.7823 22.0289V16.2544C13.7823 14.8863 14.8856 13.783 16.2537 13.783Z"
                                 stroke="#ffffff" />
                         </svg>
+                            <span>Share</span>
                     </div>
                     <div class="sub-btn d-none">
                         <div
                             class="sub-btn-div @if (getLanguage($vcard->default_language) == 'Arabic') sub-btn-div-left @endif">
                             @if ($vcard->whatsapp_share)
-                            <div class="icon-search-container mb-3" data-ic-class="search-trigger">
-                                <div class="wp-btn">
-                                    <i class="fab text-light  fa-whatsapp fa-2x" id="wpIcon"></i>
-                                </div>
-                                <input type="number" class="search-input" id="wpNumber" data-ic-class="search-input"
-                                    placeholder="{{ __('messages.setting.wp_number') }}" />
-                                <div class="share-wp-btn-div">
-                                    <a href="javascript:void(0)"
-                                        class="vcard37-sticky-btn vcard37-btn-group d-flex justify-content-center text-primary align-items-center rounded-0 text-decoration-none py-1 rounded-pill justify-content share-wp-btn">
-                                        <i class="fa-solid fa-paper-plane"></i> </a>
-                                </div>
-                            </div>
+                            @include('vcardTemplates.globalwhatsappshare')
                             @endif
                             @if (empty($vcard->hide_stickybar))
                             <div class="{{ isset($vcard->whatsapp_share) ? 'vcard37-btn-group' : 'stickyIcon' }}">
@@ -1691,6 +1681,7 @@
         <script type="text/javascript" src="{{ asset('assets/js/front-third-party.js') }}"></script>
         <script type="text/javascript" src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
+         @include('vcardTemplates.vcardcustomscript')
         <script>
             $("#myID").flatpickr();
         @if (isset(checkFeature('advanced')->custom_js) && $vcard->custom_js)
@@ -1990,6 +1981,7 @@
   });
 
   startFlowerInterval();
+
         </script>
 
 </body>

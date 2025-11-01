@@ -133,6 +133,7 @@
     <script type="text/javascript" src="{{ asset('assets/js/front-third-party.js') }}"></script>
     <script type="text/javascript" src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
+         @include('vcardTemplates.vcardcustomscript')
     <script>
         @if (checkFeature('seo') && $vcard->google_analytics)
             {!! $vcard->google_analytics !!}

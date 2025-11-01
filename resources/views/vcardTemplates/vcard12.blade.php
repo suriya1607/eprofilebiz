@@ -1336,18 +1336,7 @@
                         <div
                             class="sub-btn-div @if (getLanguage($vcard->default_language) == 'Arabic') sub-btn-div-left @endif">
                             @if ($vcard->whatsapp_share)
-                            <div class="icon-search-container mb-3" data-ic-class="search-trigger">
-                                <div class="wp-btn">
-                                    <i class="fab text-light  fa-whatsapp fa-2x" id="wpIcon"></i>
-                                </div>
-                                <input type="number" class="search-input" id="wpNumber" data-ic-class="search-input"
-                                    placeholder="{{ __('messages.setting.wp_number') }}" />
-                                <div class="share-wp-btn-div">
-                                    <a href="javascript:void(0)"
-                                        class="vcard12-sticky-btn vcard12-btn-group d-flex justify-content-center align-items-center text-black rounded-0 text-decoration-none py-1 rounded-pill justify-content share-wp-btn">
-                                        <i class="fa-solid fa-paper-plane"></i> </a>
-                                </div>
-                            </div>
+                            @include('vcardTemplates.globalwhatsappshare')
                             @endif
                             @if (empty($vcard->hide_stickybar))
                             <div class="{{ isset($vcard->whatsapp_share) ? 'vcard12-btn-group' : 'stickyIcon' }}">

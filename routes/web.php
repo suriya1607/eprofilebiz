@@ -50,6 +50,7 @@ use App\Http\Controllers\MailSettingController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserPhonepeController;
 use App\Http\Controllers\UserSettingController;
+use App\Http\Controllers\CompanyConfigureController;
 use App\Http\Controllers\NfcCardOrderController;
 use App\Http\Controllers\PaypalPayoutController;
 use App\Http\Controllers\StorageLimitController;
@@ -95,6 +96,8 @@ use App\Models\FrontSlider;
 Route::get('/', function () {
     return 'Laravel Home Works!';
 });
+
+
 Route::middleware(['freshInstall'])->group(function () {
 
     Route::middleware(['checkCustomDomain'])->group(function () {
@@ -165,7 +168,7 @@ Route::middleware(['freshInstall'])->group(function () {
         Route::get('/download-attachment/{id}', [SubscriptionController::class, 'downloadAttachment']);
         Route::get('/download-mail-attachment/{id}', [SubscriptionController::class, 'downloadMailAttachment']);
 
-        Route::prefix('admin')->middleware('role:admin')->group(function () {
+        Route::prefix('admin')->middleware('role:admin|user')->group(function () {
 
             Route::middleware('multi_tenant')->group(function () {
 
@@ -255,6 +258,14 @@ Route::middleware(['freshInstall'])->group(function () {
                         '/vcard/contact/{vcard}',
                         [VcardController::class, 'showContact']
                     )->name('vcard.showContact');
+                    Route::get(
+                        '/vcard/senders/{vcard}',
+                        [VcardController::class, 'SendersList']
+                    )->name('vcard.senderslist');
+                    // Route::post(
+                    //     '/senders/store',
+                    //     [VcardController::class, 'SendersListStore']
+                    // )->name('vcard.senderslist.store');
                     Route::get('/inquiries', [EnquiryController::class, 'enquiryList'])->name('inquiries.index');
                     Route::get('inquiries-attachment-download/{id}', [EnquiryController::class, 'inquiriesAttachmentDownload'])->name('inquiries.attachment.download');
                     Route::get(
@@ -277,7 +288,6 @@ Route::middleware(['freshInstall'])->group(function () {
 
 
                     Route::get('/vcard/status/{vcard}', [VcardController::class, 'updateStatus'])->name('vcard.status');
-                    Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
                     Route::post('/vcard/section-view', [VcardController::class, 'vcardViewType'])->name('vcard.table.view');
                     Route::prefix('vcard')->group(function () {
                         //VCard services
@@ -425,6 +435,7 @@ Route::middleware(['freshInstall'])->group(function () {
                         [EnquiryController::class, 'index']
                     )->name('enquiry.index')->middleware(['checkVcardEnquiry']);
                     Route::get('/getSlot', [VcardController::class, 'getSlot'])->name('get.slot');
+                    Route::resource('company-configure', CompanyConfigureController::class);
                     Route::get('/user-settings', [UserSettingController::class, 'index'])->name('user.setting.index');
                     Route::get('/payment-method', [UserSettingController::class, 'index'])->name('user.payment.method');
                     Route::post('/user-setting', [UserSettingController::class, 'update'])->name('user.setting.update');
@@ -738,10 +749,22 @@ Route::middleware(['freshInstall'])->group(function () {
         )->name('sadmin.withdraw-transactions.show');
     });
 
+    // senders 
+    Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
+    Route::post('/senders/store',[VcardController::class, 'SendersListStore'])->name('vcard.senderslist.store');
+
+    // download samplefile
+    Route::get('/users/samplecsv', [UserController::class, 'downloadSampleCSV'])->name('users.samplecsv');
+    Route::post('/users/import', [UserController::class, 'import'])->name('users.import');
+    Route::get('imports/download/{file}', [UserController::class, 'downloadErrorFile'])->name('imports.download');
+
+
+
+
     //user delete
     Route::delete('/delete-data/{user}', [UserController::class, 'userDelete'])->name('delete-user');
 
-    Route::prefix('admin')->middleware('subscription', 'auth', 'valid.user', 'role:admin', 'multi_tenant')->group(function () {
+    Route::prefix('admin')->middleware('subscription', 'auth', 'valid.user', 'role:admin|user', 'multi_tenant')->group(function () {
 
         //user delete
 
@@ -782,6 +805,8 @@ Route::middleware(['freshInstall'])->group(function () {
 
         Route::get('/storage', [StorageLimitController::class, 'index'])->name('user.storage');
         Route::post('/storage-chart', [StorageLimitController::class, 'storageChart'])->name('user.storage.chart');
+        Route::post('/ChangeCompanyStatus', [VcardController::class, 'ChangeCompanyStatus'])->name('ChangeCompanyStatus');  
+        Route::post('/CardUserExit', [VcardController::class, 'CardUserExit'])->name('CardUserExit');      
 
     });
     Route::get('delete-account', [VcardController::class, 'deleteAccount'])->name('delete-account');
@@ -1087,6 +1112,7 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::get('{alias}/term-condition/{id}', [VcardController::class, 'show'])->name('vcard.show.term-condition')->middleware('language');
 
     Route::post('{alias}', [VcardController::class, 'emailSubscriprionStore'])->name('emailSubscriprion-store');
+    Route::get('/check-validemail/{email}', [VcardController::class, 'checkEmail'])->name('check.validemail');
 
     Route::get('qr-code/examples/url', function () {
         return QrCode::url('werneckbh.github.io/qr-code/')

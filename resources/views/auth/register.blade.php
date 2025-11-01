@@ -60,10 +60,17 @@
                                         <label for="email" class="form-label">
                                             {{ __('messages.user.email') . ':' }}<span class="required"></span>
                                         </label>
-                                        <input name="email" type="email" class="form-control" id="email"
-                                            aria-describedby="email" placeholder=" {{ __('messages.user.email') }}"
-                                            value="{{ old('email') }}" required>
-                                        <span id="email-error-msg" class="text-danger fw-400 fs-small mt-2"></span>
+
+                                        @if(isset($sharedUser) && $sharedUser)
+                                            <input type="email" class="form-control" id="email" 
+                                                value="{{ $sharedUser->email }}" readonly>
+                                            <input type="hidden" name="shareduser" value="{{ $sharedUser->id }}">
+                                        @else
+                                            <input name="email" type="email" class="form-control" id="email"
+                                                aria-describedby="email" placeholder="{{ __('messages.user.email') }}"
+                                                value="{{ old('email') }}" required>
+                                            <span id="email-error-msg" class="text-danger fw-400 fs-small mt-2"></span>
+                                        @endif
                                     </div>
                                     @if (getSuperAdminSettingValue('phone_number_required'))
                                         <div class="col-md-12 mb-4">
@@ -109,6 +116,22 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <!-- Dropdown for selecting Individual or Company -->
+                                    <div class="col-md-12 mb-4">
+                                        <label for="user_type" class="form-label">User Type:<span class="required"></span></label>
+                                        <select id="user_type" name="user_type" class="form-control" required>
+                                            <option value="1">Individual</option>
+                                            <option value="2">Company</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Section for Company -->
+                                    <div id="company_div" class="col-md-12 mb-4" style="display:none;">
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" value="1" id="is_associative" name="company_type">
+                                            <label class="form-check-label" for="is_associative">Associative?</label>
+                                        </div>
+                                    </div>
                                     <div class="col-md-12 mb-4 element">
                                         <div class="form-check">
                                             <input type="checkbox" name="term_policy_check" class="form-check-input"
@@ -127,9 +150,12 @@
                                     @if (getSuperAdminSettingValue('captcha_enable'))
                                         <div class="col-md-12 mb-sm-7 mb-4">
                                             @if (getRecaptchaVersion() == 1)
-                                                <div class="g-recaptcha"
+                                                <div class="h-captcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                                <script src="https://hcaptcha.com/1/api.js" async defer></script>
+
+                                                <!-- <div class="g-recaptcha"
                                                     data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                                                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                                                <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
                                             @else
                                                 <input type="hidden" name="g-recaptcha-response" id="recaptcha-token">
                                                 <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}" async defer>
@@ -182,3 +208,18 @@
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+   $(document).ready(function() {
+    $('#user_type').change(function() {
+        console.log($(this).val());
+        if ($(this).val() == 2) {
+            $('#company_div').show();
+        } else {
+            $('#company_div').hide();
+        }
+    });
+    $('#user_type').trigger('change');
+});
+</script>
+

@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Services\RecaptchaV3Async;
 use App\Services\RecaptchaV2Async;
+use Illuminate\Support\Facades\Http;
+
 
 class CreateRegisterRequest extends FormRequest
 {
@@ -23,6 +25,9 @@ class CreateRegisterRequest extends FormRequest
     public function rules(): array
     {
         $rules = User::$rules;
+        if ($this->input('shareduser')) {
+        unset($rules['email']); // removes email rule
+        }
         if (getSuperAdminSettingValue('phone_number_required') == 1) {
             $rules['contact'] = 'required';
         }
@@ -31,9 +36,14 @@ class CreateRegisterRequest extends FormRequest
         if (getSuperAdminSettingValue('captcha_enable')) {
             $rules['g-recaptcha-response'] = ['required', function ($attribute, $value, $fail) {
                 if(getRecaptchaVersion() == 1) {
-                    if (!verifyRecaptcha($value)) {
-                        $fail(__('messages.placeholder.invalid_captcha'));
-                    }
+                            $response = Http::asForm()->post('https://hcaptcha.com/siteverify', [
+            'secret'   => config('services.hcaptcha.secret'), // store in config/services.php
+            'response' => $value,
+            'remoteip' => request()->ip(),
+        ]);
+                    // if (!verifyRecaptcha($value)) {
+                    //     $fail(__('messages.placeholder.invalid_captcha'));
+                    // }
                 } else {
                     $recaptchaService = new RecaptchaV3Async();
                     $promise = $recaptchaService->verifyAsync($value);

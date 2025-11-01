@@ -77,18 +77,7 @@
     <div class="main-bg" @if (getLanguage($vcard->default_language) == 'Arabic') dir="rtl" @endif>
 
         @if ($vcard->whatsapp_share)
-            <div class="vcard11-icon-container icon-search-container  mb-3" data-ic-class="search-trigger">
-                <div class="wp-btn">
-                    <i class="fab text-light  fa-whatsapp fa-2x" id="wpIcon"></i>
-                </div>
-                <input type="number" class="search-input" id="wpNumber" data-ic-class="search-input"
-                    placeholder="{{ __('messages.setting.wp_number') }}">
-                <div class="share-wp-btn-div">
-                    <a href="javascript:void(0)"
-                        class="vcard11-wp-btn d-flex justify-content-center align-items-center text-light rounded-0 text-decoration-none py-1 rounded-pill justify-content share-wp-btn">
-                        <i class="fa-solid fa-paper-plane"></i> </a>
-                </div>
-            </div>
+            @include('vcardTemplates.globalwhatsappshare')
         @endif
         {{-- Pwa support --}}
         @if (isset($enable_pwa) && $enable_pwa == 1 && !isiOSDevice())
@@ -135,6 +124,7 @@
     <script type="text/javascript" src="{{ asset('assets/js/front-third-party-vcard11.js') }}"></script>
     <script type="text/javascript" src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
+         @include('vcardTemplates.vcardcustomscript')
     @if (checkFeature('seo') && $vcard->google_analytics)
         {!! $vcard->google_analytics !!}
     @endif

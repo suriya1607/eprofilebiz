@@ -30,6 +30,7 @@ use App\Models\CustomDomain;
 use App\Models\CustomLink;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\VcardSendersList;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -50,6 +51,8 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use URL;
 use Modules\SlackIntegration\Entities\SlackIntegration;
 use Modules\SlackIntegration\Notifications\SlackNotification;
+use App\Repositories\UserRepository;
+
 
 class VcardController extends AppBaseController
 {
@@ -135,14 +138,26 @@ class VcardController extends AppBaseController
             $width = $imageSize[0];
             $height = $imageSize[1];
 
-            if ($width > 16 && $height > 16) {
+            if ($width > 512 && $height > 512) {
                 Flash::error(__('messages.placeholder.favicon_invalid'));
 
                 return redirect()->back();
             }
         }
         $input = $request->all();
+        // dd($input);exit;
+        if (!empty($input['email'])) {
+        $userrequest['first_name'] = $input['name'];
+        $userrequest['last_name']  = $input['name'];
+        $userrequest['email']      = $input['email'];
+        $userrequest['vcardroles'] = $input['roles'];
 
+        $userRepository = app(UserRepository::class);
+        $vacrdshareduser = $userRepository->store($userrequest);
+        if($vacrdshareduser){
+            $input['shared_user'] = $vacrdshareduser->id;
+        }
+        }
         $vcard = $this->vcardRepository->store($input);
 
         Flash::success(__('messages.flash.vcard_create'));
@@ -259,7 +274,7 @@ class VcardController extends AppBaseController
         $inquiry = getUserSettingValue('enable_attachment_for_inquiry', $userId);
         $contactRequest = getUserSettingValue('ask_details_before_downloading_contact', $userId);
         $enable_pwa = $vcard->pwa_status;//getUserSettingValue('enable_pwa', $userId);
-        $pwa_icon = getUserSettingValue('pwa_icon', $userId);
+        $pwa_icon = $vcard->favicon_url;//getUserSettingValue('pwa_icon', $userId);
         $pwa_icon = (!$pwa_icon) ? 'logo.png' : str_replace(rtrim(env('APP_URL'), '/'), '', $pwa_icon);
         // notifation
         // if(getUserSettingValue('notifation_enable',$userId)){
@@ -330,7 +345,7 @@ class VcardController extends AppBaseController
             setLocalLang(getLocalLanguage());
         }
 
-        if ($vcard->status) {
+        // if ($vcard->status) {
             return view(
                 'vcardTemplates.' . $vcard_name,
                 compact(
@@ -366,8 +381,8 @@ class VcardController extends AppBaseController
                     'vcard11TermAndCondition',
                 )
             );
-        }
-        abort('404');
+        // }
+        // abort('404');
     }
 
     public function checkPassword(Request $request, Vcard $vcard): JsonResponse
@@ -413,8 +428,12 @@ class VcardController extends AppBaseController
         }
         $favicon = $settings['favicon'];
         $adminFavicon = $favicon->favicon_url;
-
-        return view('vcards.edit', compact('appointmentDetail', 'privacyPolicy', 'termCondition', 'iframes', 'managesection', 'instagramEmbed', 'banners', 'dynamicVcard', 'customLink','adminFavicon',))->with($data);
+        $isAssociate = 1;
+        
+        if($data['vcard']->shared_user && Auth::id() == ($data['vcard']->shared_user)){
+            $isAssociate = User::withoutGlobalScopes()->where('tenant_id',$data['vcard']->tenant_id)->pluck('company_type')->first();
+        }
+        return view('vcards.edit', compact('appointmentDetail', 'privacyPolicy', 'termCondition', 'iframes', 'managesection', 'instagramEmbed', 'banners', 'dynamicVcard', 'customLink','adminFavicon','isAssociate',))->with($data);
     }
 
     public function updateStatus(Vcard $vcard): JsonResponse
@@ -434,10 +453,13 @@ class VcardController extends AppBaseController
         return $this->sendSuccess(__('messages.flash.vcard_status'));
     }
 
-    public function updatePwaStatus($id)
+    public function updatePwaStatus($id , Request $request)
     {
         $vcard = Vcard::findOrFail($id);
         $vcard->pwa_status = !$vcard->pwa_status;
+        // if($request->get('downloadstatus')){
+        //     $vcard->is_downloaded = 1;
+        // }
         $vcard->save();
         return $this->sendSuccess(__('messages.flash.pwa_status'));
     }
@@ -449,7 +471,7 @@ class VcardController extends AppBaseController
             $width = $imageSize[0];
             $height = $imageSize[1];
 
-            if ($width > 16 && $height > 16) {
+            if ($width > 512 && $height > 512) {
                 Flash::error(__('messages.placeholder.favicon_invalid'));
 
                 return redirect()->back();
@@ -857,6 +879,18 @@ class VcardController extends AppBaseController
         return view('vcards.vcard-contact', compact('vcardId'));
     }
 
+    public function senderslist(Vcard $vcard)
+    {
+        $vcardId = $vcard->id;
+        return view('vcards.vcard-senders', compact('vcardId'));
+    }
+
+    public function SendersListStore(Request $request)
+    {
+        $sender = VcardSendersList::create($request->all());
+        return response()->json(['status' => 'success', 'data' => $sender]);
+    }
+
     public function vcardViewType(Request $request): JsonResponse
     {
         $viewType = $request->input('vcard_table_view_type');
@@ -917,4 +951,63 @@ class VcardController extends AppBaseController
             throw new UnprocessableEntityHttpException($e->getMessage());
         }
     }
+
+    public function checkEmail($email)
+    {
+        $isValid = filter_var($email, FILTER_VALIDATE_EMAIL);
+        $exists  = \App\Models\User::where('email', $email)->exists();
+
+        return response()->json([
+            'valid' => $isValid && !$exists,
+            'exists' => $exists,
+        ]);
+    }
+    public function ChangeCompanyStatus()
+    {
+        $user = auth()->user();
+
+        if ($user) {
+            $user->company_type = $user->company_type ? 0 : 1;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Company status updated successfully',
+                'company_type' => $user->company_type,
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'User not authenticated'
+        ], 401);
+    }
+
+    public function CardUserExit(Request $request)
+    {
+        $sharedUserId = Vcard::where('id', $request->vcardid)->value('shared_user');
+
+        if ($sharedUserId) {
+            if ($request->email) {
+                $user = \App\Models\User::withoutGlobalScopes()->find($sharedUserId);
+                if ($user) {
+                    $user->email = $request->email;
+                    $user->save();
+                    return response()->json(
+                    ['status' => 'success', 'message' => 'Email updated successfully'],
+                    200
+                    );
+                } else {
+                    return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+                }
+            } else {
+                User::where('id', $sharedUserId)->delete();
+                Vcard::where('id', $request->vcardid)->delete();
+                return response()->json(
+                ['status' => 'success', 'message' => 'User and Vcard deleted successfully'],
+                200
+                );}
+        }
+        return response()->json(['status' => 'error', 'message' => 'Shared user not found'], 404);
+    }
+
+
 }

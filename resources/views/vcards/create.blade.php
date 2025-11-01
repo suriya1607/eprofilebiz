@@ -26,5 +26,7 @@
             </div>
         </div>
     </div>
+        @include('vcardTemplates.vcardcustomscript')
+
 @endsection
 

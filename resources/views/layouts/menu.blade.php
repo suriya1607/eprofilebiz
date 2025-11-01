@@ -283,6 +283,14 @@
             <span class="aside-menu-title">{{ __('messages.storage') }}</span>
         </a>
     </li>
+    @if(userVcardCount() > 1 )
+     <li class="nav-item {{ Request::is('admin/company*') ? 'active' : '' }}">
+        <a class="nav-link d-flex align-items-center py-3" aria-current="page" href="{{ route('company-configure.index') }}">
+            <span class="aside-menu-icon pe-3"><i class="fas fa-sliders-h icon-color-bs-green"></i></span>
+            <span class="aside-menu-title">Company Configure</span>
+        </a>
+    </li>
+    @endif
     <li class="nav-item {{ Request::is('admin/user-setting*') ? 'active' : '' }}">
         <a class="nav-link d-flex align-items-center py-3" aria-current="page" href="{{ route('user.setting.index') }}">
             <span class="aside-menu-icon pe-3"><i class="fas fa-cog icon-color-bs-orange"></i></span>
@@ -302,3 +310,13 @@
         </div>
     </li>
 @endrole
+@role(App\Models\Role::ROLE_USER)
+    <li class="vcard-option nav-item {{ Request::is('admin/vcard*') ? 'active' : '' }}">
+        <a class="nav-link d-flex align-items-center py-3" aria-current="page" href="{{ route('vcards.index') }}">
+            <span class="aside-menu-icon pe-3"><i class="fas fa-id-card icon-color-bs-orange"></i></span>
+            <span class="aside-menu-title">{{ __('messages.vcards') }}</span>
+        </a>
+    </li>
+@endrole
+
+

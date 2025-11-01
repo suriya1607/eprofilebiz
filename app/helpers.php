@@ -2776,6 +2776,32 @@ if (!function_exists('checkTotalVcard')) {
     }
 }
 
+if (!function_exists('userVcardCount')) {
+    function userVcardCount()
+    {
+        $makeVcard = 0;
+        $subscription = Subscription::where('tenant_id', getLogInTenantId())->where(
+            'status',
+            Subscription::ACTIVE
+        )->first();
+
+        if (!empty($subscription)) {
+            // $totalCards = Vcard::whereTenantId(getLogInTenantId())->count();
+            $makeVcard = $subscription->no_of_vcards;
+        }
+
+        return $makeVcard;
+    }
+}
+
+if (!function_exists('isSharedUser')) {
+    function isSharedUser(): bool
+    {
+        $isSharedUser = Vcard::withoutGlobalScopes()->where('shared_user', Auth::id())->exists();
+        return $isSharedUser;
+    }
+}
+
 if (!function_exists('checkTotalWhatsappStore')){
     function checkTotalWhatsappStore(): bool
     {

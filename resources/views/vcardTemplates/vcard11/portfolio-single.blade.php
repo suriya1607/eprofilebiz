@@ -137,6 +137,7 @@
         <script type="text/javascript" src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-circle-progress/1.2.2/circle-progress.min.js"></script>
         <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
+         @include('vcardTemplates.vcardcustomscript')
 
         <script>
             $('.counter').each(function () {

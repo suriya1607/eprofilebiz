@@ -1,5 +1,5 @@
 <?php ?>
-@if ($partName == 'basics' || $partName == 'basics2' || $partName == 'basics3')
+@if ($partName == 'basics' || $partName == 'basics2' || $partName == 'basics3' || $partName == 'social-links')
     @if (isset($vcard) && isset($vcard->id))
         <ul class="nav nav-tabs nav-items-all-tabs-vcard flex-nowrap gap-3 gap-lg-0 overflow-auto mb-1">
             <li class="text-nowrap nav-item nav-item-tabs">
@@ -11,6 +11,11 @@
                 <a class="nav-link position-relative p-0 {{ isset($partName) && $partName == 'basics2' ? 'active' : '' }}"
                     href="{{ route('vcards.edit', $vcard->id) . '?part=basics2' }}"
                     aria-selected="false">{{ __('messages.basic_details2') }}</a>
+            </li>
+            <li class="text-nowrap nav-item nav-item-tabs">
+                <a class="nav-link position-relative p-0 {{ isset($partName) && $partName == 'social-links' ? 'active' : '' }}"
+                    href="{{ route('vcards.edit', $vcard->id) . '?part=social-links' }}"
+                    aria-selected="false">{{ __('messages.social.social_links') }}</a>
             </li>
             <li class="text-nowrap nav-item nav-item-tabs">
                 <a class="nav-link position-relative p-0 {{ isset($partName) && $partName == 'basics3' ? 'active' : '' }}"
@@ -67,7 +72,32 @@
                     <div id="vcardDescriptionQuill" class="editor-height" style="height: 200px"></div>
                     {{ Form::hidden('description', isset($vcard) ? $vcard->description : null, ['id' => 'vcardDescriptionData']) }}
                 </div>
+                @if (!isset($vcard) && userVcardCount() > 1)
+                    <div class="mb-5">
+                        <div>
+                            {{ Form::label('Invite User Via Mail' . ':', null, ['class' => 'form-label']) }}
+                            {{ Form::text('email', null, [
+                                'class' => 'form-control',
+                                'id' => 'emailField',
+                                'placeholder' => __('messages.form.email')
+                            ]) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-5 d-none" id="roleSection">
+                        <label class="form-label">Assign Role</label><br>
+                        <div class="form-check">
+                            <input class="form-check-input role-check" type="checkbox" name="roles[]" value="2" id="roleAdmin">
+                            <label class="form-check-label" for="roleAdmin">Admin</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input role-check" type="checkbox" name="roles[]" value="3" id="roleUser" checked>
+                            <label class="form-check-label" for="roleUser">User</label>
+                        </div>
+                    </div>                    
+                @endif
             </div>
+                       
             <div class="col-lg-6 mb-7">
                 <div class="row">
                     <div class="col-lg-6 col-sm-8 mb-7">

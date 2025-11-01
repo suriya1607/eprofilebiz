@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Vcard;
+use App\Models\User;
 use App\Utils\ResponseUtil;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,15 @@ class checkVcardEdit
     {
         $requestVcardId = $request->vcard->id;
         $tenantId = getLogInUser()->tenant_id;
-        $VcardId = Vcard::whereTenantId($tenantId)->pluck('id')->toArray();
+        $userId = getLogInUser()->id;
+        $VcardId = Vcard::withoutGlobalScopes()
+        ->where(function($q) use ($tenantId, $userId) {
+            $q->where('tenant_id', $tenantId)
+            ->orWhere('shared_user', $userId);
+        })
+        ->pluck('id')
+        ->toArray();
+        // $VcardId = Vcard::whereTenantId($tenantId)->orWhere('shared_user', $shareduser->shared_user)->pluck('id')->toArray();
         if (in_array($requestVcardId, $VcardId)) {
             return $next($request);
         } else {

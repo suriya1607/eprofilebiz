@@ -1302,35 +1302,7 @@
                         <div
                             class="sub-btn-div @if (getLanguage($vcard->default_language) == 'Arabic') sub-btn-div-left @endif">
                             @if ($vcard->whatsapp_share)
-                            <div class="icon-search-container mb-3" data-ic-class="search-trigger">
-                                <div class="search-wrapper">
-                                    <div class="vcard33-sticky-btn">
-                                        <div class="vcard33-btn-group wp-btn">
-                                            {{-- <i class="fab text-gradient fa-whatsapp fa-2x" id="wpIcon"></i> --}}
-                                            <svg width="25" height="25" viewBox="0 0 25 25" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M21.3057 3.63045C18.955 1.2907 15.8277 0.00133515 12.4994 0C9.17859 0 6.04639 1.28822 3.68014 3.6274C1.3097 5.97057 0.00305469 9.08451 0 12.3842V12.388V12.3903C0.000381837 14.3875 0.525598 16.4022 1.52257 18.2413L0.0341744 25L6.87726 23.4449C8.61042 24.3176 10.5442 24.7776 12.4947 24.7784H12.4996C15.8199 24.7784 18.9521 23.49 21.3187 21.1506C23.6913 18.8055 24.9985 15.6956 25 12.3938C25.001 9.11522 23.6892 6.003 21.3057 3.63045ZM12.4994 22.8271H12.495C10.7437 22.8264 9.00848 22.3871 7.47713 21.5565L7.15352 21.381L2.60317 22.415L3.59156 17.9274L3.40102 17.5991C2.45368 15.967 1.9531 14.1653 1.9531 12.3882C1.95672 6.63624 6.6873 1.95122 12.499 1.95122C15.3067 1.95236 17.9448 3.03974 19.9273 5.0127C21.9398 7.01618 23.0477 9.63726 23.0467 12.3932C23.0444 18.1465 18.3129 22.8271 12.4994 22.8271Z"
-                                                    fill="#ffffff" />
-                                                <path
-                                                    d="M9.09818 6.92676H8.55024C8.35951 6.92676 8.04984 6.99809 7.7879 7.28286C7.52577 7.56782 6.78711 8.25656 6.78711 9.65732C6.78711 11.0581 7.81177 12.4115 7.95458 12.6017C8.09757 12.7917 9.93249 15.758 12.8387 16.8991C15.254 17.8475 15.7456 17.6588 16.2696 17.6113C16.7939 17.564 17.9614 16.9228 18.1996 16.2581C18.4379 15.5934 18.4379 15.0235 18.3665 14.9044C18.2949 14.7858 18.1042 14.7147 17.8184 14.5724C17.5324 14.4299 16.131 13.7295 15.8689 13.6343C15.6068 13.5395 15.4162 13.492 15.2255 13.7772C15.0348 14.0618 14.4733 14.7202 14.3064 14.9102C14.1398 15.1003 13.9729 15.1242 13.6869 14.9817C13.4009 14.8388 12.4895 14.5329 11.3972 13.5632C10.5471 12.8084 9.95712 11.846 9.79026 11.561C9.62358 11.2763 9.7725 11.1222 9.91588 10.9801C10.0444 10.8527 10.2179 10.6783 10.3609 10.5122C10.5037 10.3459 10.5444 10.2272 10.6398 10.0373C10.7351 9.84729 10.6874 9.68097 10.616 9.53868C10.5444 9.3962 9.99568 7.98839 9.74138 7.42534H9.74157C9.52736 6.95117 9.30189 6.93515 9.09818 6.92676Z"
-                                                    fill="#ffffff" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <input type="number" class="search-input" id="wpNumber" data-ic-class="search-input"
-                                        placeholder="{{ __('messages.setting.wp_number') }}" />
-                                    <div class="share-wp-btn-div ">
-                                        <a href="javascript:void(0)"
-                                            class="vcard33-btn-group d-flex justify-content-center text-primary align-items-center rounded-0 text-decoration-none py-1 rounded-pill justify-content share-wp-btn d-flex justify-content-center align-items-center">
-                                            <div class="wp-bg d-flex justify-content-center align-items-center">
-                                                <i class="fa-solid fa-paper-plane text-white"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                            </div>
+                            @include('vcardTemplates.globalwhatsappshare')
                             @endif
                             @if (empty($vcard->hide_stickybar))
                             <div class="{{ isset($vcard->whatsapp_share) ? '' : 'stickyIcon' }}">
@@ -1662,6 +1634,7 @@
 <script type="text/javascript" src="{{ asset('assets/js/front-third-party.js') }}"></script>
 <script type="text/javascript" src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
+         @include('vcardTemplates.vcardcustomscript')
 @if (checkFeature('seo') && $vcard->google_analytics)
 {!! $vcard->google_analytics !!}
 @endif

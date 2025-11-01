@@ -59,6 +59,7 @@ class Analytic extends Model
         'vcard_id',
         'whatsapp_store_id',
         'uri',
+        'receiver_name',
         'source',
         'country',
         'state',
