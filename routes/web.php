@@ -750,7 +750,7 @@ Route::middleware(['freshInstall'])->group(function () {
     });
 
     // senders 
-    Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->name('vcard.pwa.status');
+    Route::get('/vcard/pwa-status/{id}', [VcardController::class, 'updatePwaStatus'])->middleware('subscription')->name('vcard.pwa.status');
     Route::post('/senders/store',[VcardController::class, 'SendersListStore'])->name('vcard.senderslist.store');
 
     // download samplefile
