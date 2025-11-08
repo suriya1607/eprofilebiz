@@ -182,7 +182,7 @@ class VcardController extends AppBaseController
     /**
      * @return Application|Factory|View
      */
-    public function show($alias, $id = null)
+    public function show(Request $request , $alias, $id = null)
     {
         $middleware = new CustomDomainCheck();
 
@@ -197,6 +197,16 @@ class VcardController extends AppBaseController
         }
 
         $requestName = request()->route()->getName();
+
+        if ($request->has('sid')) {
+
+            $senderId = base64_decode($request->sid);
+
+            VcardSendersList::where('id', $senderId)->update([
+                'visited' => 1,
+                'visited_at'=>Carbon::now(),
+            ]);
+        }
 
         if ($requestName == "vcard.subdomain") {
             $alias = request()->alias;
@@ -888,7 +898,7 @@ class VcardController extends AppBaseController
     public function SendersListStore(Request $request)
     {
         $sender = VcardSendersList::create($request->all());
-        return response()->json(['status' => 'success', 'data' => $sender]);
+        return response()->json(['status' => 'success', 'id' => $sender->id]);
     }
 
     public function vcardViewType(Request $request): JsonResponse
