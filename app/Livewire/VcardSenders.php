@@ -44,6 +44,17 @@ class VcardSenders extends LivewireTableComponent
                 ->searchable()
                 ->format(fn($value) => $value ?? '-'),
 
+            Column::make(__('Visited'), 'visited')
+            ->sortable()
+            ->format(function ($value) {
+                return $value == 1
+                    ? '<span class="badge bg-success">Opened</span>'
+                    : '<span class="badge bg-danger">Closed</span>';
+            })
+            ->html(),
+            Column::make(__('Visited At'), 'visited_at')
+                ->format(fn ($value) => $value ? $value : '-')
+                ->sortable(),
             Column::make(__('Sender Message'), "senders_message")
                 ->sortable()
                 ->searchable()

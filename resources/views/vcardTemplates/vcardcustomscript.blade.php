@@ -49,10 +49,6 @@
             const message = $('#wpMessageInput').val().trim()|| '';
             const receiver = $('#wpReceiver').val().trim();
             const vcardId = $('input[name="vcard_id"]').val();
-            const currentUrl = receiver 
-                ? `${document.URL}?receiver=${btoa(receiver)}` 
-                : document.URL;
-            /* const currentUrl = document.URL; */
 
             if (!number) {
                 alert("Please enter a WhatsApp number");
@@ -70,8 +66,9 @@
                 senders_message: message,
             },
             success: function (res) {
+            let currentUrl = `${document.URL}?sid=${btoa(res.id)}`;
 
-let greetingmsg = `*Greetings,*\n\nHere's a quick glimpse of my e-profile:\n${currentUrl}\n\nLooking forward to fruitful engagements.`;
+            let greetingmsg = `*Greetings,*\n\nHere's a quick glimpse of my e-profile:\n${currentUrl}\n\nLooking forward to fruitful engagements.`;
 
 
                 const encodedMsg = encodeURIComponent(greetingmsg);

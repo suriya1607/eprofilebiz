@@ -32,8 +32,8 @@
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <input type="number" id="wpNumber" class="form-control mb-2" placeholder="{{ __('messages.setting.wp_number') }}">
-                <input type="text" id="wpReceiver" class="form-control mb-2" placeholder="{{ __('messages.setting.wp_reciever') }}">
+                <input type="text" id="wpReceiver" class="form-control mb-2 py-3" placeholder="{{ __('messages.setting.wp_reciever') }}">
+                <input type="text" id="wpNumber" class="form-control mb-2" placeholder="{{ __('messages.setting.wp_number') }}">
                 <textarea id="wpMessageInput" class="form-control mb-3" rows="2"
                     placeholder="{{ __('messages.setting.wp_description') }}"></textarea>
                 <div class="text-center">
