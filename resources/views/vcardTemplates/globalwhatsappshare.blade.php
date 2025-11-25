@@ -36,6 +36,12 @@
                 <input type="text" id="wpNumber" class="form-control mb-2" placeholder="{{ __('messages.setting.wp_number') }}">
                 <textarea id="wpMessageInput" class="form-control mb-3" rows="2"
                     placeholder="{{ __('messages.setting.wp_description') }}"></textarea>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="saveContactCheckbox">
+                    <label class="form-check-label" for="saveContactCheckbox">
+                        Save this contact
+                    </label>
+                </div>
                 <div class="text-center">
                    <a href="javascript:void(0)" 
                         class="btn btn-success d-flex justify-content-center align-items-center rounded-pill py-1"
