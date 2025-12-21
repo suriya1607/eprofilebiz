@@ -32,7 +32,7 @@ class SendCardNotCreatedReminder extends Command
     public function handle()
     {
         //
-            $users = User::doesntHave('vcard')->where('id',517)->get();
+            $users = User::doesntHave('vcard')->get();
             if ($users->isNotEmpty()) {
                 foreach ($users as $user) {
                     $data = [

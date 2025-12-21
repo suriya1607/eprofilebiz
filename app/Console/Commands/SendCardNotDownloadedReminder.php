@@ -15,7 +15,7 @@ class SendCardNotDownloadedReminder extends Command
 
     public function handle()
     {
-        $users = User::where('id',517)->whereHas('vcard', function ($q) {
+        $users = User::whereHas('vcard', function ($q) {
                         $q->where('is_downloaded', 0);
                     })->get();
         if ($users->isNotEmpty()) {
