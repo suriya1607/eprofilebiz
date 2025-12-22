@@ -40,7 +40,25 @@
             }
         });
 
+        function downloadVCard(name, number) {
+            const vcard = [
+            'BEGIN:VCARD',
+            'VERSION:3.0',
+            `FN:${name}`,
+            `TEL;TYPE=CELL:${number}`,
+            'END:VCARD'
+            ].join('\r\n');
 
+            const blob = new Blob([vcard], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${name || 'contact'}.vcf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
 
         $('#sendWhatsAppBtn').on('click', function (e) {
             e.preventDefault();
@@ -49,6 +67,11 @@
             const message = $('#wpMessageInput').val().trim()|| '';
             const receiver = $('#wpReceiver').val().trim();
             const vcardId = $('input[name="vcard_id"]').val();
+            const saveContact = $('#saveContactCheckbox').is(':checked');
+            if (saveContact) {
+                    downloadVCard(receiver || 'My Contact', number);
+
+            }
 
             if (!number) {
                 alert("Please enter a WhatsApp number");
@@ -59,7 +82,7 @@
             url: '{{ route("vcard.senderslist.store") }}',
             method: 'POST',
             data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
+                // _token: $('meta[name="csrf-token"]').attr('content'),
                 vcard_id: vcardId,
                 senders_name: receiver,
                 senders_number: number,
