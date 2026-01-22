@@ -12,6 +12,7 @@ use App\Console\Commands\SendCardNotDownloadedReminder;
 use App\Console\Commands\PaymentReminderCommand;
 use App\Console\Commands\DailyWhatsappShareNotificationCommand;
 use App\Console\Commands\WeeklyWhatsappShareNotificationCommand;
+use App\Console\Commands\WeeklyVcardReportCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
         PaymentReminderCommand::class,
         DailyWhatsappShareNotificationCommand::class,
         WeeklyWhatsappShareNotificationCommand::class,
+        WeeklyVcardReportCommand::class,    
     ];
 
     /**
@@ -47,6 +49,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(WeeklyCardViewNotificationCommand::class)->weeklyOn(0, '09:00');
         $schedule->command(DailyWhatsappShareNotificationCommand::class)->daily();
         $schedule->command(WeeklyWhatsappShareNotificationCommand::class)->weeklyOn(0, '10:00');
+        $schedule->command(WeeklyVcardReportCommand::class)->weeklyOn(0, '11:00');
     }
 
     /**
