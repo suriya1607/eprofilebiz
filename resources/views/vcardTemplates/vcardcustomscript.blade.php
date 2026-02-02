@@ -105,7 +105,8 @@
             },
             error: function (err) {
                 console.error('Error saving sender:', err);
-                alert("Failed to save sender info");
+                alert("Failed to save sender info.\nClick OK to Reload");
+                location.reload();
             }
         });
         });
