@@ -2,11 +2,35 @@
        $(document).ready(function () {
 
         let deferredPrompt;
+            renderMsgHistory();
+
 
         window.addEventListener('beforeinstallprompt', (e) => {
             console.log('beforeinstallprompt fired');
             e.preventDefault();
             deferredPrompt = e;
+        });
+
+        const data = sessionStorage.getItem('wpForm');
+        if (data) {
+            const v = JSON.parse(data);
+            $('#wpNumber').val(v.number);
+            $('#wpReceiver').val(v.receiver);
+            $('#wpMessageInput').val(v.message);
+        }
+        else if (!$('#wpNumber').val()) {
+            $('#wpNumber').val('+91');
+        }
+
+        $('#wpNumber').on('input', function () {
+            let value = this.value;
+            if (!value.startsWith('+91')) {
+                value = '+91';
+            }
+            let digits = value.replace('+91', '').replace(/\D/g, '');
+            digits = digits.slice(0, 10);
+
+            this.value = '+91' + digits;
         });
 
         $('#installPwaBtn').on('click', function () {
@@ -62,12 +86,21 @@
 
         $('#sendWhatsAppBtn').on('click', function (e) {
             e.preventDefault();
+            sessionStorage.setItem('wpForm', JSON.stringify({
+                number: $('#wpNumber').val(),
+                receiver: $('#wpReceiver').val(),
+                message: $('#wpMessageInput').val()
+            }));
 
             const number = $('#wpNumber').val().trim();
             const message = $('#wpMessageInput').val().trim()|| '';
             const receiver = $('#wpReceiver').val().trim();
             const vcardId = $('input[name="vcard_id"]').val();
             const saveContact = $('#saveContactCheckbox').is(':checked');
+            if(message) {
+                saveLastMessages(message);
+                renderMsgHistory();
+            }
             if (saveContact) {
                     downloadVCard(receiver || 'My Contact', number);
 
@@ -89,6 +122,9 @@
                 senders_message: message,
             },
             success: function (res) {
+
+            sessionStorage.removeItem('wpForm');
+
             let currentUrl = `${document.URL}?sid=${btoa(res.id)}`;
 
             let greetingmsg = `*Greetings,*\n\nHere's a quick glimpse of my e-profile:\n${currentUrl}\n\nLooking forward to fruitful engagements.`;
@@ -162,6 +198,44 @@
         }
     });
     });
+
+
+    function saveLastMessages(message) {
+        let history = JSON.parse(sessionStorage.getItem('wpMsgHistory')) || [];
+
+        history = history.filter(m => m !== message);
+
+        history.unshift(message);
+
+        history = history.slice(0, 3);
+
+        sessionStorage.setItem('wpMsgHistory', JSON.stringify(history));
+    }
+
+    function renderMsgHistory() {
+        const history = JSON.parse(sessionStorage.getItem('wpMsgHistory')) || [];
+        const box = $('#msgHistory');
+
+        box.html('');
+
+        history.forEach((msg, index) => {
+            box.append(`
+                <div class="msg-pill" data-msg="${msg.replace(/"/g, '&quot;')}">
+                    ${msg}
+                </div>
+            `);
+        });
+    }
+
+    $(document).on('click', '.msg-pill', function () {
+        $(this).toggleClass('active');
+        let combined = [];
+        $('.msg-pill.active').each(function () {
+            combined.push($(this).data('msg'));
+        });
+        $('#wpMessageInput').val(combined.join('\n\n')).focus();
+    });
+
 
     // vcard exit 
     // $(document).on('click', '.vcard_exit-btn', function(event) {

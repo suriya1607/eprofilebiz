@@ -36,6 +36,8 @@
                 <input type="text" id="wpNumber" class="form-control mb-2" placeholder="{{ __('messages.setting.wp_number') }}">
                 <textarea id="wpMessageInput" class="form-control mb-3" rows="2"
                     placeholder="{{ __('messages.setting.wp_description') }}"></textarea>
+                <div id="msgHistory" class="msg-history mt-2"></div>
+
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" value="" id="saveContactCheckbox">
                     <label class="form-check-label" for="saveContactCheckbox">
@@ -54,6 +56,39 @@
         </div>
     </div>
 </div>
+
+<style>
+    .msg-history {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.msg-pill {
+    background: #f1f1f1;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    transition: all .2s ease;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.msg-pill:hover {
+    background: #e5e5e5;
+}
+
+.msg-pill.active {
+    background: #d1f5e1;
+    color: #0f5132;
+    font-weight: 500;
+}
+
+</style>
 
 
 
