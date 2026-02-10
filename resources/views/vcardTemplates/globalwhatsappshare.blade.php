@@ -34,9 +34,18 @@
             <div class="modal-body">
                 <input type="text" id="wpReceiver" class="form-control mb-2 py-3" placeholder="{{ __('messages.setting.wp_reciever') }}">
                 <input type="text" id="wpNumber" class="form-control mb-2" placeholder="{{ __('messages.setting.wp_number') }}">
-                <textarea id="wpMessageInput" class="form-control mb-3" rows="2"
-                    placeholder="{{ __('messages.setting.wp_description') }}"></textarea>
-                <div id="msgHistory" class="msg-history mt-2"></div>
+            <div class="position-relative">
+                    <textarea id="wpMessageInput" class="form-control"
+                        rows="3" placeholder="Type message..."></textarea>
+                        <small class="text-muted">
+                Press <b>Enter</b> to save new chat • Click suggestion to insert <a href="#" id="manageChatsLink">Manage chats</a>
+                </small>
+
+                    <div id="quickSuggestBox" class="quick-suggest-box"></div>
+            </div>
+
+
+
 
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" value="" id="saveContactCheckbox">
@@ -56,37 +65,51 @@
         </div>
     </div>
 </div>
-
 <style>
-    .msg-history {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+ .quick-suggest-box{
+  position:absolute;
+  left:0;
+  right:0;
+  top:100%;
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:10px;
+  max-height:180px;
+  overflow-y:auto;
+  display:none;
+  z-index:999;
 }
 
-.msg-pill {
-    background: #f1f1f1;
-    border-radius: 999px;
-    padding: 6px 14px;
-    font-size: 13px;
-    cursor: pointer;
-    user-select: none;
-    transition: all .2s ease;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.quick-item{
+  padding:8px 12px;
+  cursor:pointer;
+  font-size:13px;
 }
 
-.msg-pill:hover {
-    background: #e5e5e5;
+.quick-item:hover{
+  background:#f1f1f1;
+}
+.quick-item{
+  padding:8px 12px;
+  cursor:pointer;
+  font-size:13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.msg-pill.active {
-    background: #d1f5e1;
-    color: #0f5132;
-    font-weight: 500;
+.quick-item span mark{
+  background:#ffe58f;
+  padding:0;
 }
+
+.remove-btn{
+  color:#999;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.remove-btn:hover{color:red;}
 
 </style>
 
