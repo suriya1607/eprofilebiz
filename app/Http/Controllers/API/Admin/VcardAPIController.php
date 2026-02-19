@@ -35,7 +35,7 @@ class VcardAPIController extends AppBaseController
     {
         $loggedInTenantId = getLogInTenantId();
 
-        $vcardIds = Vcard::whereTenantId($loggedInTenantId)->pluck('id')->toArray();
+        $vcardIds = Vcard::whereTenantId($loggedInTenantId)->orWhere('shared_user', Auth::id())->pluck('id')->toArray();
 
         $vcards = Vcard::whereIn('id', $vcardIds)->get();
 

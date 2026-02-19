@@ -82,7 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('income-chart', [DashboardAPIController::class, 'incomeChartData']);
     });
 
-    Route::prefix('admin')->middleware('role:admin')->group(function () {
+    Route::prefix('admin')->middleware('role:admin|user')->group(function () {
 
         //Admin Dashboard
         Route::get('dashboard', [AdminDashboardAPIController::class, 'index']);
