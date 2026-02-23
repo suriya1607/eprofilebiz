@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Console\Scheduling\Schedule;
+use App\Repositories\UserRepository;
 
 class VcardAPIController extends AppBaseController
 {
@@ -165,6 +166,8 @@ class VcardAPIController extends AppBaseController
             'name' => 'required|string|min:6',
             'occupation' => 'nullable|string',
             'description' => 'nullable|string',
+            'email' => 'nullable|email',
+            'roles' => 'required_with:email|array',
         ]);
 
         $validator = Validator::make($request->all(), $rules);
@@ -177,6 +180,20 @@ class VcardAPIController extends AppBaseController
         $input['tenant_id'] = getLogInTenantId();
 
         try {
+            if (!empty($input['email'])) {
+                $userrequest = [];
+                $userrequest['first_name'] = $input['name'];
+                $userrequest['last_name']  = $input['name'];
+                $userrequest['email']      = $input['email'];
+                $userrequest['vcardroles'] = $input['roles'];
+
+                $userRepository = app(UserRepository::class);
+                $vacrdshareduser = $userRepository->store($userrequest);
+
+                if ($vacrdshareduser) {
+                    $input['shared_user'] = $vacrdshareduser->id;
+                }
+            }
             $vcard = $this->vcardRepository->store($input);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
