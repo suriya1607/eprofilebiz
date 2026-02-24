@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Repositories\UserRepository;
+use App\Models\VcardSendersList;
 
 class VcardAPIController extends AppBaseController
 {
@@ -492,5 +493,18 @@ class VcardAPIController extends AppBaseController
 
 
         return $this->sendResponse($subscription, 'Subscription data retrieved successfully.');
+    }
+
+    public function VcardSender(Request $request, $vcard)
+    {
+        $senders = VcardSendersList::where('vcard_id', $vcard)
+            ->orderBy('created_at', 'desc')
+            ->get(); 
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Vcard senders fetched successfully',
+            'data' => $senders
+        ]);
     }
 }

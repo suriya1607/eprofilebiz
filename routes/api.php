@@ -115,7 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('vcard/template/{vcard}', [VcardAPIController::class, 'vcardTemplate']);
         Route::get('vcard-basic-details/{vcard}', [VcardAPIController::class, 'getVcardBasicDetails']);
         Route::get('vcard-templates/{vcard}', [VcardAPIController::class, 'getVcardTemplate']);
-
+        Route::get('vcard-senders/{vcard}', [VcardAPIController::class, 'VcardSender']);
         //Groups
         Route::post('groups-create', [GroupAPIController::class, 'groupCreate']);
         Route::get('groups', [GroupAPIController::class, 'groupData']);
