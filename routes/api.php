@@ -281,6 +281,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('profile-edit', [ProfileAPIController::class, 'editProfile']);
     Route::post('profile-update', [ProfileAPIController::class, 'updateProfile']);
     Route::post('language-update', [ProfileAPIController::class, 'updateLanguage']);
+    Route::get('iscompanyuser',[VcardAPIController::class,'isCompanyUser']);
 
     //Groups
     Route::post('groups-create', [SuperAdminGroupsAPIController::class, 'groupCreate']);

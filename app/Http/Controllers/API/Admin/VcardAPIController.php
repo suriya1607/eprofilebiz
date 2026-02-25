@@ -507,4 +507,27 @@ class VcardAPIController extends AppBaseController
             'data' => $senders
         ]);
     }
+
+    public function isCompanyUser()
+    {
+        
+        $makeVcard = 0;
+        $companyuser = User::whereId(Auth::id())->where('user_type', 2)->first();
+        if (!empty($companyuser)) {
+        $subscription = Subscription::where('tenant_id', getLogInTenantId())->where(
+            'status',
+            Subscription::ACTIVE
+        )->first();
+
+        if (!empty($subscription)) {
+            // $totalCards = Vcard::whereTenantId(getLogInTenantId())->count();
+            $makeVcard = $subscription->no_of_vcards;
+        }
+        }
+
+        return response()->json([
+            'status' => true,
+            'isCompanyUser' => $makeVcard > 1
+        ]);
+    }
 }
