@@ -33,7 +33,7 @@
             </div>
             <div class="modal-body">
                 <input type="text" id="wpReceiver" class="form-control mb-2 py-3" placeholder="{{ __('messages.setting.wp_reciever') }}">
-                <input type="text" id="wpNumber" class="form-control mb-2" placeholder="{{ __('messages.setting.wp_number') }}">
+                <input type="text" id="wpNumber" class="form-control mb-2" placeholder="{{ __('messages.setting.wp_number') }}" value ="+91">
             <div class="position-relative">
                     <textarea id="wpMessageInput" class="form-control"
                         rows="3" placeholder="Type message..."></textarea>

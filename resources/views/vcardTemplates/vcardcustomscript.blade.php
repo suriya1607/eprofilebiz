@@ -16,20 +16,6 @@
             $('#wpReceiver').val(v.receiver);
             $('#wpMessageInput').val(v.message);
         }
-        else if (!$('#wpNumber').val()) {
-            $('#wpNumber').val('+91');
-        }
-
-        $('#wpNumber').on('input', function () {
-            let value = this.value;
-            if (!value.startsWith('+91')) {
-                value = '+91';
-            }
-            let digits = value.replace('+91', '').replace(/\D/g, '');
-            digits = digits.slice(0, 10);
-
-            this.value = '+91' + digits;
-        });
 
         $('#installPwaBtn').on('click', function () {
             console.log('Install button clicked');
