@@ -39,6 +39,7 @@ use App\Http\Controllers\API\SuperAdmin\GroupsAPIController as SuperAdminGroupsA
 use App\Http\Controllers\API\SuperAdmin\VcardsAPIController as SuperAdminVcardsAPIController;
 use App\Http\Controllers\API\SuperAdmin\BusinessAPIController as SuperAdminBusinessAPIController;
 use App\Http\Controllers\CustomLinkController;
+use App\Http\Controllers\VcardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,7 @@ Route::post(
     [AuthAPIController::class, 'resetPassword']
 )->middleware('throttle:5,1')->name('set.password');
 Route::post('/reset-password', [AuthAPIController::class, 'changePassword'])->name('password.reset');
+Route::get('/check-validemail/{email}', [VcardController::class, 'checkEmail'])->name('check.validemail');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('admin')->middleware('role:admin')->group(function () {
