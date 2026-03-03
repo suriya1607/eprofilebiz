@@ -168,7 +168,7 @@ class VcardAPIController extends AppBaseController
             'occupation' => 'nullable|string',
             'description' => 'nullable|string',
             'email' => 'nullable|email',
-            'roles' => 'required_with:email|array',
+            'roles' => 'required_with:email',
         ]);
 
         $validator = Validator::make($request->all(), $rules);

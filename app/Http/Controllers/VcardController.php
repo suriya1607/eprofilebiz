@@ -145,12 +145,11 @@ class VcardController extends AppBaseController
             }
         }
         $input = $request->all();
-        // dd($input);exit;
         if (!empty($input['email'])) {
         $userrequest['first_name'] = $input['name'];
         $userrequest['last_name']  = $input['name'];
         $userrequest['email']      = $input['email'];
-        $userrequest['vcardroles'] = $input['roles'];
+        $userrequest['vcardroles'] = is_array($input['roles'])  ? $input['roles'][0]  : $input['roles'];
 
         $userRepository = app(UserRepository::class);
         $vacrdshareduser = $userRepository->store($userrequest);
