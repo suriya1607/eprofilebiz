@@ -40,6 +40,7 @@ use App\Http\Controllers\API\SuperAdmin\VcardsAPIController as SuperAdminVcardsA
 use App\Http\Controllers\API\SuperAdmin\BusinessAPIController as SuperAdminBusinessAPIController;
 use App\Http\Controllers\CustomLinkController;
 use App\Http\Controllers\VcardController;
+use App\Http\Controllers\API\Admin\SyncaroApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,6 +106,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('enquiries', [EnquiryAPIController::class, 'enquiryData']);
         Route::get('enquiries/{enquiry}', [EnquiryAPIController::class, 'enquiry']);
         Route::delete('enquiries-delete/{enquiry}', [EnquiryAPIController::class, 'deleteEnquiry']);
+
+        // syncaro
+
+        Route::Resource('syncaro', SyncaroApiController::class);
 
         //Vcard
         Route::post('create-vcard', [VcardAPIController::class, 'vcardCreate']);
