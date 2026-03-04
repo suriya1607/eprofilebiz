@@ -40,7 +40,8 @@ use App\Http\Controllers\API\SuperAdmin\VcardsAPIController as SuperAdminVcardsA
 use App\Http\Controllers\API\SuperAdmin\BusinessAPIController as SuperAdminBusinessAPIController;
 use App\Http\Controllers\CustomLinkController;
 use App\Http\Controllers\VcardController;
-use App\Http\Controllers\API\Admin\SyncaroApiController;
+use App\Http\Controllers\API\Admin\CardListApiController;
+use App\Http\Controllers\API\ContactedLeadListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,7 +110,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // syncaro
 
-        Route::Resource('syncaro', SyncaroApiController::class);
+        Route::Resource('card-list', CardListApiController::class);
+        Route::Resource('contacted-lead-list', ContactedLeadListController::class);
 
         //Vcard
         Route::post('create-vcard', [VcardAPIController::class, 'vcardCreate']);

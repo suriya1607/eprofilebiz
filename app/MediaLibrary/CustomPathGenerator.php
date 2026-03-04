@@ -27,6 +27,8 @@ use App\Models\VcardService;
 use App\Models\WhatDrivesUs;
 use App\Models\WhatsappStore;
 use App\Models\WhatsappStoreProduct;
+use App\Models\ContactedLeadList;
+use App\Models\CardList;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 
@@ -102,6 +104,10 @@ class CustomPathGenerator implements PathGenerator
                 return str_replace('{PARENT_DIR}', FrontSlider::PATH, $path);
             case WhatDrivesUs::PATH:
                 return str_replace('{PARENT_DIR}', WhatDrivesUs::PATH, $path);
+            case ContactedLeadList::CARD_IMAGE_PATH:
+                return str_replace('{PARENT_DIR}', ContactedLeadList::CARD_IMAGE_PATH, $path);
+            case CardList::CARD_IMAGE_PATH:
+                return str_replace('{PARENT_DIR}', CardList::CARD_IMAGE_PATH, $path);
             case 'default':
                 return '';
         }

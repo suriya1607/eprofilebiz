@@ -6,14 +6,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CardList;
 
-class SyncaroApiController extends Controller
+class CardListApiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $data = CardList::where('user_id', Auth()->id())->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Cards Retrieved Successfully',
+            'data' => $data
+        ]);
     }
 
     /**
@@ -33,31 +39,20 @@ class SyncaroApiController extends Controller
             'card_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $imagePath = null;
+        $input = $request->all();
+        $input['user_id'] = auth()->id();
 
-        // if ($request->hasFile('card_image')) {
-        //     $imagePath = $request->file('card_image')
-        //                         ->store('cards', 'public');
-        // }
+        $card = CardList::create($input);
 
-        $card = CardList::create([
-            'id' => $request->id,
-            'address' => $request->address,
-            'card_image' => $imagePath,
-            'email' => $request->email,
-            'name' => $request->name,
-            'organization' => $request->organization,
-            'phone' => $request->phone,
-            'qr_code' => $request->qr_code,
-            'scannedLocation' => $request->scannedLocation,
-            'scannedLocationGeoPoint' => $request->scannedLocationGeoPoint,
-            'service' => $request->service,
-            'tag' => $request->tag,
-            'title' => $request->title,
-            'url' => $request->url,
-            'user_id' => Auth()->id(),
-            'favourite' => $request->favourite ?? false,
-        ]);
+        if (isset($input['card_image']) && !empty($input['card_image'])) {
+
+            $media = $card->newAddMedia($input['card_image'])
+                ->toMediaCollection(CardList::CARD_IMAGE_PATH, config('app.media_disc'));
+
+            $card->update([
+                'card_image' => $media->getFullUrl()
+            ]);
+        }
 
         return response()->json([
             'status' => true,
@@ -65,13 +60,19 @@ class SyncaroApiController extends Controller
             'data' => $card
         ]);
     }
-
+    
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $data = CardList::find($id);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Card Retrieved Successfully',
+            'data' => $data
+        ]);
     }
 
     /**
