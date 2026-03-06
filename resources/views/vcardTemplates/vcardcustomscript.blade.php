@@ -9,6 +9,14 @@
             deferredPrompt = e;
         });
 
+        const data = sessionStorage.getItem('wpForm');
+        if (data) {
+            const v = JSON.parse(data);
+            $('#wpNumber').val(v.number);
+            $('#wpReceiver').val(v.receiver);
+            $('#wpMessageInput').val(v.message);
+        }
+
         $('#installPwaBtn').on('click', function () {
             console.log('Install button clicked');
             
@@ -62,12 +70,18 @@
 
         $('#sendWhatsAppBtn').on('click', function (e) {
             e.preventDefault();
+            sessionStorage.setItem('wpForm', JSON.stringify({
+                number: $('#wpNumber').val(),
+                receiver: $('#wpReceiver').val(),
+                message: $('#wpMessageInput').val()
+            }));
 
             const number = $('#wpNumber').val().trim();
             const message = $('#wpMessageInput').val().trim()|| '';
             const receiver = $('#wpReceiver').val().trim();
             const vcardId = $('input[name="vcard_id"]').val();
             const saveContact = $('#saveContactCheckbox').is(':checked');
+
             if (saveContact) {
                     downloadVCard(receiver || 'My Contact', number);
 
@@ -89,6 +103,9 @@
                 senders_message: message,
             },
             success: function (res) {
+
+            sessionStorage.removeItem('wpForm');
+
             let currentUrl = `${document.URL}?sid=${btoa(res.id)}`;
 
             let greetingmsg = `*Greetings,*\n\nHere's a quick glimpse of my e-profile:\n${currentUrl}\n\nLooking forward to fruitful engagements.`;
@@ -162,6 +179,156 @@
         }
     });
     });
+   
+// ===== QUICK CHAT CLIPBOARD SCRIPT =====
+
+let suppressSuggest = false;
+let clickingSuggestion = false;
+
+/* ------------------ STORAGE ------------------ */
+
+function getChats(){
+    return JSON.parse(localStorage.getItem('quickChats')) || [];    
+}
+
+function saveChat(text){
+    let chats = getChats();
+
+    if(!chats.includes(text)){
+        chats.unshift(text);       // newest first
+        chats = chats.slice(0,100);
+        localStorage.setItem('quickChats', JSON.stringify(chats));
+    }
+}
+
+function deleteChat(index){
+    let chats = getChats();
+    chats.splice(index,1);
+    localStorage.setItem('quickChats', JSON.stringify(chats));
+}
+
+/* ------------------ UI HELPERS ------------------ */
+
+function highlight(text, keyword){
+    if(!keyword) return text;
+    const r = new RegExp(`(${keyword})`, 'gi');
+    return text.replace(r, '<mark>$1</mark>');
+}
+
+function showSuggestions(list, keyword){
+    const box = $('#quickSuggestBox');
+    box.html('');
+
+    if(list.length === 0){
+        box.hide();
+        return;
+    }
+
+    list.forEach((msg,i)=>{
+        box.append(`
+            <div class="quick-item" data-index="${i}">
+                <span>${highlight(msg, keyword)}</span>
+                <span class="remove-btn">✕</span>
+            </div>
+        `);
+    });
+
+    box.show();
+}
+
+/* ------------------ EVENTS ------------------ */
+
+/* Focus → last 5 */
+// $('#wpMessageInput').on('focus', function(){
+//     suppressSuggest = false;
+//     showSuggestions(getChats().slice(0,5), '');
+// });
+    $('#manageChatsLink').on('click', function(){
+        console.log('Manage chats clicked');
+        showSuggestions(getChats());
+    });
+/* Typing */
+$('#wpMessageInput').on('input', function(){
+
+    if(suppressSuggest){
+        suppressSuggest = false;
+        return;
+    }
+
+    const lines = $(this).val().split('\n');
+    const keyword = lines[lines.length-1];
+
+    if(!keyword){
+        $('#quickSuggestBox').hide();
+        // showSuggestions(getChats().slice(0,5), '');
+        return;
+    }
+
+    const matches = getChats().filter(c =>
+        c.toLowerCase().includes(keyword.toLowerCase())
+    );
+
+    showSuggestions(matches, keyword);
+});
+
+/* Select suggestion */
+$(document).on('click', '.quick-item span:first-child', function(){
+
+    const selected = $(this).text();
+    const area = $('#wpMessageInput');
+    let lines = area.val().split('\n');
+
+    lines.pop();        // remove keyword
+    lines.push(selected);
+
+    area.val(lines.join('\n'));
+    saveChat(selected);
+
+    suppressSuggest = true;
+    $('#quickSuggestBox').hide();
+});
+
+/* Delete suggestion */
+$(document).on('click', '.remove-btn', function(e){
+    e.stopPropagation();
+
+    const index = $(this).parent().data('index');
+    deleteChat(index);
+
+    const keyword = $('#wpMessageInput').val().split('\n').pop();
+    const matches = getChats().filter(c =>
+        c.toLowerCase().includes(keyword.toLowerCase())
+    );
+
+    showSuggestions(matches, keyword);
+});
+
+/* Auto-save new chat on Enter */
+$('#wpMessageInput').on('keydown', function(e){
+    if(e.key === 'Enter'){
+        const text = $(this).val().split('\n').pop().trim();
+        if(text) saveChat(text);
+    }
+});
+
+/* ------------------ BLUR FIX ------------------ */
+
+$('#quickSuggestBox')
+  .on('mousedown', function(){ clickingSuggestion = true; })
+  .on('mouseup', function(){ clickingSuggestion = false; });
+
+$('#wpMessageInput').on('blur', function(){
+    setTimeout(() => {
+        if(!clickingSuggestion){
+            $('#quickSuggestBox').hide();
+        }
+    }, 150);
+});
+
+// ===== END SCRIPT =====
+
+
+
 
     // vcard exit 
     // $(document).on('click', '.vcard_exit-btn', function(event) {

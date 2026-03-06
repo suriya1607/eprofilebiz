@@ -92,7 +92,7 @@ class UserRepository extends BaseRepository
                 $user->is_active = true;
                 $user->save();
             } elseif(isset($input['vcardroles'])){
-                $role = Role::find($input['vcardroles'][0]);
+                $role = Role::find($input['vcardroles']);
                 $input['affiliate_code'] = generateUniqueAffiliateCode();
                 $user = User::create($input)->assignRole($role->name);
                 $user->save();

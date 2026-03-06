@@ -321,6 +321,7 @@
         @include('profile.changePassword')
         @include('profile.changelanguage')
         @include('layouts.shepherd-js')
+        @include('components.app-install-banner')
         @if (moduleExists('TwofactorAuthentication'))
             @include('twofactorauthentication::twofactor_authentication.two_factor_authentication')
         @endif

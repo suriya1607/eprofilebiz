@@ -1251,7 +1251,7 @@ return [
         'display_add_to_contact' => 'Display Add To Contact',
         'hide_stickybar' => 'Hide Digital Sticky Bar',
         'add_contact' => 'Add to contact',
-        'wp_number' => 'Mobile with country code excluding (+)',
+        'wp_number' => 'Mobile with country code',
         'wp_description' => 'Enter your message',
         'wp_reciever' => 'Enter receiver name',
         'affiliation_withdraw' => 'Affiliation withdraws',

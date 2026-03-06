@@ -70,6 +70,8 @@ class RegistrationAPIController extends AppBaseController
                 'region_code' => $request->region_code,
                 'tenant_id' => $tenant->id,
                 'affiliate_code' => generateUniqueAffiliateCode(),
+                'user_type' => $request->user_type,
+                'company_type' => $request->has('company_type') ? 1 : 0,
             ])->assignRole(Role::ROLE_ADMIN);
 
             $plan = Plan::whereIsDefault(true)->first();

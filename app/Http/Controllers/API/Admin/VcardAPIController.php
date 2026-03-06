@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Console\Scheduling\Schedule;
+use App\Repositories\UserRepository;
+use App\Models\VcardSendersList;
 
 class VcardAPIController extends AppBaseController
 {
@@ -35,7 +37,7 @@ class VcardAPIController extends AppBaseController
     {
         $loggedInTenantId = getLogInTenantId();
 
-        $vcardIds = Vcard::whereTenantId($loggedInTenantId)->pluck('id')->toArray();
+        $vcardIds = Vcard::whereTenantId($loggedInTenantId)->orWhere('shared_user', Auth::id())->pluck('id')->toArray();
 
         $vcards = Vcard::whereIn('id', $vcardIds)->get();
 
@@ -165,6 +167,8 @@ class VcardAPIController extends AppBaseController
             'name' => 'required|string|min:6',
             'occupation' => 'nullable|string',
             'description' => 'nullable|string',
+            'email' => 'nullable|email',
+            'roles' => 'required_with:email',
         ]);
 
         $validator = Validator::make($request->all(), $rules);
@@ -177,6 +181,20 @@ class VcardAPIController extends AppBaseController
         $input['tenant_id'] = getLogInTenantId();
 
         try {
+            if (!empty($input['email'])) {
+                $userrequest = [];
+                $userrequest['first_name'] = $input['name'];
+                $userrequest['last_name']  = $input['name'];
+                $userrequest['email']      = $input['email'];
+                $userrequest['vcardroles'] = $input['roles'];
+
+                $userRepository = app(UserRepository::class);
+                $vacrdshareduser = $userRepository->store($userrequest);
+
+                if ($vacrdshareduser) {
+                    $input['shared_user'] = $vacrdshareduser->id;
+                }
+            }
             $vcard = $this->vcardRepository->store($input);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
@@ -475,5 +493,41 @@ class VcardAPIController extends AppBaseController
 
 
         return $this->sendResponse($subscription, 'Subscription data retrieved successfully.');
+    }
+
+    public function VcardSender(Request $request, $vcard)
+    {
+        $senders = VcardSendersList::where('vcard_id', $vcard)
+            ->orderBy('created_at', 'desc')
+            ->get(); 
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Vcard senders fetched successfully',
+            'data' => $senders
+        ]);
+    }
+
+    public function isCompanyUser()
+    {
+        
+        $makeVcard = 0;
+        $companyuser = User::whereId(Auth::id())->where('user_type', 2)->first();
+        if (!empty($companyuser)) {
+        $subscription = Subscription::where('tenant_id', getLogInTenantId())->where(
+            'status',
+            Subscription::ACTIVE
+        )->first();
+
+        if (!empty($subscription)) {
+            // $totalCards = Vcard::whereTenantId(getLogInTenantId())->count();
+            $makeVcard = $subscription->no_of_vcards;
+        }
+        }
+
+        return response()->json([
+            'status' => true,
+            'isCompanyUser' => $makeVcard > 1
+        ]);
     }
 }

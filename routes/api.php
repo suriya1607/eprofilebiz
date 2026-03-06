@@ -39,6 +39,9 @@ use App\Http\Controllers\API\SuperAdmin\GroupsAPIController as SuperAdminGroupsA
 use App\Http\Controllers\API\SuperAdmin\VcardsAPIController as SuperAdminVcardsAPIController;
 use App\Http\Controllers\API\SuperAdmin\BusinessAPIController as SuperAdminBusinessAPIController;
 use App\Http\Controllers\CustomLinkController;
+use App\Http\Controllers\VcardController;
+use App\Http\Controllers\API\Admin\CardListApiController;
+use App\Http\Controllers\API\ContactedLeadListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +68,7 @@ Route::post(
     [AuthAPIController::class, 'resetPassword']
 )->middleware('throttle:5,1')->name('set.password');
 Route::post('/reset-password', [AuthAPIController::class, 'changePassword'])->name('password.reset');
+Route::get('/check-validemail/{email}', [VcardController::class, 'checkEmail'])->name('check.validemail');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('admin')->middleware('role:admin')->group(function () {
@@ -82,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('income-chart', [DashboardAPIController::class, 'incomeChartData']);
     });
 
-    Route::prefix('admin')->middleware('role:admin')->group(function () {
+    Route::prefix('admin')->middleware('role:admin|user')->group(function () {
 
         //Admin Dashboard
         Route::get('dashboard', [AdminDashboardAPIController::class, 'index']);
@@ -104,6 +108,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('enquiries/{enquiry}', [EnquiryAPIController::class, 'enquiry']);
         Route::delete('enquiries-delete/{enquiry}', [EnquiryAPIController::class, 'deleteEnquiry']);
 
+        // syncaro
+
+        Route::Resource('card-list', CardListApiController::class);
+        Route::Resource('contacted-lead-list', ContactedLeadListController::class);
+
         //Vcard
         Route::post('create-vcard', [VcardAPIController::class, 'vcardCreate']);
         Route::post('vcard/{vcard}', [VcardAPIController::class, 'vcardBasicDetails']);
@@ -115,7 +124,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('vcard/template/{vcard}', [VcardAPIController::class, 'vcardTemplate']);
         Route::get('vcard-basic-details/{vcard}', [VcardAPIController::class, 'getVcardBasicDetails']);
         Route::get('vcard-templates/{vcard}', [VcardAPIController::class, 'getVcardTemplate']);
-
+        Route::get('vcard-senders/{vcard}', [VcardAPIController::class, 'VcardSender']);
+        Route::post('/senders/store',[VcardController::class, 'SendersListStore']);
         //Groups
         Route::post('groups-create', [GroupAPIController::class, 'groupCreate']);
         Route::get('groups', [GroupAPIController::class, 'groupData']);
@@ -281,6 +291,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('profile-edit', [ProfileAPIController::class, 'editProfile']);
     Route::post('profile-update', [ProfileAPIController::class, 'updateProfile']);
     Route::post('language-update', [ProfileAPIController::class, 'updateLanguage']);
+    Route::get('iscompanyuser',[VcardAPIController::class,'isCompanyUser']);
 
     //Groups
     Route::post('groups-create', [SuperAdminGroupsAPIController::class, 'groupCreate']);
