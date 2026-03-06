@@ -32,7 +32,6 @@ class ContactedLeadList extends Model implements HasMedia
         'email'
     ];
 
-    public $timestamps = false;
 
     /**
      * Media collection name

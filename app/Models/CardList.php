@@ -33,8 +33,6 @@ class CardList extends Model implements HasMedia
         'favourite'
     ];
 
-    public $timestamps = false;
-
     /**
      * Media collection name
      */
